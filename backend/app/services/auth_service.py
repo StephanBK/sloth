@@ -212,9 +212,6 @@ class AuthService:
 
         TUTORIAL: https://jwt.io/introduction
         """
-        if not self.supabase_jwt_secret:
-            raise ValueError("JWT secret not configured")
-
         try:
             # Decode and verify the token
             # Note: Supabase uses ES256 (ECDSA) which requires a public key, not the JWT secret
