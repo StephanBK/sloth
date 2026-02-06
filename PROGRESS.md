@@ -447,6 +447,29 @@ sloth/
   - JWT tokens working correctly ✅
 - **Project 100% DEPLOYED** - Live and accessible!
 
+### Session 9 - February 6, 2026
+- **Stripe Products Created in Dashboard:**
+  - Monthly: "Faultierdiät Monatlich" at €29.99/month - `price_1SxdauQqguFpDAu9OLqhVOlW`
+  - Yearly: "Faultierdiät Jährlich" at €239.99/year - `price_1SxddpQqguFpDAu9Zbk8yS0k`
+  - Stripe tested and verified working
+- **Google OAuth Setup (In Progress):**
+  - Created Google Cloud project "Sloth"
+  - Set up OAuth consent screen (app name: Faultierdiät, External audience)
+  - Created OAuth client credentials
+  - Configured Supabase Google provider with credentials
+  - Updated Supabase Site URL to production frontend
+  - Added redirect URL: `https://frontend-rho-nine-25.vercel.app/auth/callback`
+- **OAuth Code Exchange Fix:**
+  - Supabase uses authorization code flow (code in URL params), not implicit flow
+  - Added backend endpoint: `POST /auth/callback` to exchange code for session
+  - Added `exchange_code_for_session` method to auth_service.py
+  - Added `OAuthCodeExchangeRequest` schema
+  - Updated frontend `handleOAuthCallback` to handle both implicit and code flow
+  - Updated `AuthCallbackPage.tsx` to check both hash and query params for errors
+- **Current Status:** OAuth flow working through Google → Supabase → frontend redirect
+  - Debugging: Frontend should now POST to backend /auth/callback with code
+  - Waiting for Vercel to deploy latest commit (9679ce6)
+
 ---
 
 ## 🚀 HOW TO RESUME (READ THIS NEXT SESSION)
@@ -512,8 +535,8 @@ Then open http://localhost:5173 in your browser!
 - ✅ Modular code architecture
 
 **Needs Setup:**
-- ⏳ Stripe products/prices in Stripe Dashboard
-- ⏳ Google OAuth provider in Supabase Dashboard
+- ✅ Stripe products/prices in Stripe Dashboard (DONE!)
+- ⏳ Google OAuth - debugging code exchange (backend endpoint added, testing deployment)
 - ⏳ Stripe webhooks pointing to Railway
 
 **Railway Environment Variables (configured):**
