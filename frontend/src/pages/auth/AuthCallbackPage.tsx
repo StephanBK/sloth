@@ -17,9 +17,12 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const processCallback = async () => {
-      // Check if there's an error in the URL
-      const params = new URLSearchParams(window.location.hash.substring(1));
-      const errorMsg = params.get('error_description') || params.get('error');
+      // Check if there's an error in the URL (could be in hash or query params)
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const queryParams = new URLSearchParams(window.location.search);
+
+      const errorMsg = hashParams.get('error_description') || hashParams.get('error') ||
+                       queryParams.get('error_description') || queryParams.get('error');
 
       if (errorMsg) {
         setError(errorMsg);
@@ -30,7 +33,7 @@ export default function AuthCallbackPage() {
       const success = await handleOAuthCallback();
 
       if (success) {
-        // Clear the hash from URL for cleaner history
+        // Clear the URL params for cleaner history
         window.history.replaceState(null, '', window.location.pathname);
       } else {
         setError('Anmeldung fehlgeschlagen. Bitte versuche es erneut.');
