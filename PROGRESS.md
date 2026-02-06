@@ -4,9 +4,9 @@
 
 ---
 
-## Current Status: Phase 6 - Payment & Polish COMPLETE
+## Current Status: Phase 7 - DEPLOYED TO PRODUCTION! 🚀
 
-**Last Updated:** February 3, 2026
+**Last Updated:** February 5, 2026
 
 ---
 
@@ -221,6 +221,12 @@
 
 ## Up Next
 
+### Production Setup (Priority)
+- [ ] Set up Stripe products and prices in Stripe Dashboard
+- [ ] Set up Google OAuth in Supabase Dashboard (enable Google provider)
+- [ ] Configure Stripe webhooks pointing to Railway backend
+- [ ] Test full payment flow in production
+
 ### Final Polish (Nice to Have)
 - [ ] Add form validation feedback
 - [ ] Dashboard page improvements (quick stats, today's meals)
@@ -412,6 +418,35 @@ sloth/
   - Database migration for subscription fields
 - **Project ~95% complete** - Core app + payments done, ready for production!
 
+### Session 8 - February 5, 2026
+- **Code Modularization:**
+  - Created `/frontend/src/config/index.ts` - centralized configuration
+  - Created modular API structure under `/frontend/src/services/api/`:
+    - `client.ts` - Axios instance with interceptors
+    - `tokens.ts` - JWT token management
+    - `auth.ts`, `user.ts`, `weight.ts`, `mealPlan.ts`, `subscription.ts` - API modules
+    - `index.ts` - Central re-exports
+  - Created custom hooks under `/frontend/src/hooks/`
+  - Created reusable UI components under `/frontend/src/components/common/`
+  - Added ErrorBoundary component
+- **GitHub Repository:**
+  - Created repo: https://github.com/StephanBK/sloth
+  - Pushed all code for collaboration
+- **Production Deployment:**
+  - **Frontend deployed to Vercel:** https://frontend-rho-nine-25.vercel.app
+  - **Backend deployed to Railway:** https://sloth-production.up.railway.app
+  - Connected frontend to backend API via VITE_API_URL
+  - Added Vercel domains to CORS whitelist
+- **Database Connection Issues Fixed:**
+  - Direct Supabase connection doesn't work from Railway (IPv6)
+  - Transaction Pooler (port 6543) had SSL issues
+  - **Solution:** Use Session Pooler (port 5432) - works perfectly!
+  - Final DATABASE_URL: `postgresql://postgres.[project]:password@aws-1-eu-central-1.pooler.supabase.com:5432/postgres`
+- **Auth Flow Verified Working:**
+  - Login redirects to intake form for new users ✅
+  - JWT tokens working correctly ✅
+- **Project 100% DEPLOYED** - Live and accessible!
+
 ---
 
 ## 🚀 HOW TO RESUME (READ THIS NEXT SESSION)
@@ -422,13 +457,19 @@ sloth/
 ```
 Read /Users/stephanketterer/sloth/PROGRESS.md and continue where we left off.
 I want to work on [choose one]:
-- Option A: Set up Stripe in production (create products, webhooks)
-- Option B: Add grocery list feature
-- Option C: Test the full app end-to-end
-- Option D: Deploy to production (Railway/Vercel)
+- Option A: Set up Stripe products and webhooks in production
+- Option B: Set up Google OAuth in Supabase
+- Option C: Test full payment flow end-to-end
+- Option D: Add grocery list feature
+- Option E: Work on frontend polish
 ```
 
-### Step 3: Start both servers
+### Production URLs (LIVE!)
+- **Frontend:** https://frontend-rho-nine-25.vercel.app
+- **Backend:** https://sloth-production.up.railway.app
+- **GitHub:** https://github.com/StephanBK/sloth
+
+### Local Development (optional)
 ```bash
 # Terminal 1 - Backend
 cd /Users/stephanketterer/sloth/backend
@@ -447,47 +488,93 @@ Then open http://localhost:5173 in your browser!
 ## Current State Summary (for Claude)
 
 **Project:** Sloth - Meal planning SaaS (Faultierdiät)
-**Completion:** ~95% done (Core app + payments complete!)
+**Completion:** DEPLOYED! 🎉 (Production ready, needs Stripe/OAuth config)
 **Working directory:** /Users/stephanketterer/sloth
 
+**Production URLs:**
+- 🌐 **Frontend:** https://frontend-rho-nine-25.vercel.app
+- 🔧 **Backend:** https://sloth-production.up.railway.app
+- 📦 **GitHub:** https://github.com/StephanBK/sloth
+
 **What's working:**
-- ✅ PostgreSQL database with all tables
-- ✅ FastAPI backend with all endpoints
-- ✅ Supabase authentication (email/password + Google OAuth)
-- ✅ React frontend with all core pages
-- ✅ Frontend builds successfully
-- ✅ **Login flow works end-to-end!**
-- ✅ **Google OAuth login!**
+- ✅ PostgreSQL database with all tables (via Supabase)
+- ✅ FastAPI backend with all endpoints (on Railway)
+- ✅ Supabase authentication (email/password working!)
+- ✅ React frontend with all core pages (on Vercel)
+- ✅ **Login flow works end-to-end in production!**
 - ✅ User redirected to intake form after first login
 - ✅ Weight tracking with graph and stall detection
 - ✅ Meal plan browsing by level/gender
 - ✅ Profile page with settings
 - ✅ **100 real meal plans imported!** (50 male, 50 female, all 5 levels)
-- ✅ **Stripe subscription integration!** (monthly/yearly + promo codes)
+- ✅ **Stripe subscription integration!** (code ready, needs Dashboard setup)
 - ✅ Mobile responsive design
+- ✅ Modular code architecture
+
+**Needs Setup:**
+- ⏳ Stripe products/prices in Stripe Dashboard
+- ⏳ Google OAuth provider in Supabase Dashboard
+- ⏳ Stripe webhooks pointing to Railway
+
+**Railway Environment Variables (configured):**
+- SUPABASE_URL=https://wetlgbumumghqavzwzqh.supabase.co
+- SUPABASE_ANON_KEY=(set)
+- SUPABASE_SERVICE_ROLE_KEY=(set)
+- DATABASE_URL=postgresql://postgres.[project]:password@aws-1-eu-central-1.pooler.supabase.com:5432/postgres
+- ENVIRONMENT=production
 
 **Test user:**
 - Email: stephanketterermba@gmail.com
 - Password: testpassword123
 
-**To test the app:**
+**To test PRODUCTION:**
+1. Go to https://frontend-rho-nine-25.vercel.app
+2. Login or register
+3. Complete intake form
+
+**To test LOCAL:**
 1. Start backend: `cd backend && source venv/bin/activate && uvicorn app.main:app --reload`
 2. Start frontend: `cd frontend && npm run dev`
 3. Open http://localhost:5173
-4. Login or register
 
 ---
 
 ## Quick Reference
 
-| What | Command/Location |
-|------|------------------|
-| Start backend | `cd backend && source venv/bin/activate && uvicorn app.main:app --reload` |
-| Start frontend | `cd frontend && npm run dev` |
-| Build frontend | `cd frontend && npm run build` |
-| API docs | http://localhost:8000/docs |
-| Frontend | http://localhost:5173 |
+| What | Location |
+|------|----------|
+| **PRODUCTION Frontend** | https://frontend-rho-nine-25.vercel.app |
+| **PRODUCTION Backend** | https://sloth-production.up.railway.app |
+| **PRODUCTION API Docs** | https://sloth-production.up.railway.app/docs |
+| **GitHub Repo** | https://github.com/StephanBK/sloth |
+| Local frontend | http://localhost:5173 |
+| Local backend | http://localhost:8000 |
+| Local API docs | http://localhost:8000/docs |
+
+| Command | What it does |
+|---------|--------------|
+| `cd backend && source venv/bin/activate && uvicorn app.main:app --reload` | Start local backend |
+| `cd frontend && npm run dev` | Start local frontend |
+| `cd frontend && npm run build` | Build frontend for production |
 
 ---
 
-Let's keep pushing! 🦥
+## Deployment Notes
+
+### Railway Backend
+- Uses Session Pooler for Supabase (port 5432, NOT Transaction Pooler 6543)
+- CORS configured for Vercel domains
+- JWT verification disabled (trusts Supabase tokens)
+
+### Vercel Frontend
+- VITE_API_URL points to Railway backend
+- Auto-deploys from GitHub main branch
+
+### Database
+- Supabase PostgreSQL
+- Tables: users, weight_entries, meal_plans, meals, ingredients, user_preferences
+- Connection via Session Pooler (IPv6 workaround for Railway)
+
+---
+
+We're LIVE! 🦥🚀
