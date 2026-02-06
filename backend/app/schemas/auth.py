@@ -57,6 +57,11 @@ class GoogleOAuthRequest(BaseModel):
     )
 
 
+class OAuthCodeExchangeRequest(BaseModel):
+    """Schema for exchanging OAuth authorization code for tokens"""
+    code: str = Field(..., description="The authorization code from OAuth callback")
+
+
 # =============================================================================
 # Response Schemas (what the server returns)
 # =============================================================================

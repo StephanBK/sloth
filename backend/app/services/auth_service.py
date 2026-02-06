@@ -280,6 +280,39 @@ class AuthService:
             # Don't reveal if email exists or not (security)
             return True
 
+    async def exchange_code_for_session(self, code: str) -> dict:
+        """
+        Exchange an OAuth authorization code for session tokens.
+
+        LEARNING NOTE:
+        After Google OAuth, Supabase redirects back with a `code` parameter.
+        This code must be exchanged for actual session tokens.
+        """
+        if not self.client:
+            raise ValueError("Supabase not configured. Add credentials to .env")
+
+        try:
+            response = self.client.auth.exchange_code_for_session({"auth_code": code})
+
+            if response.user and response.session:
+                return {
+                    "user": {
+                        "id": response.user.id,
+                        "email": response.user.email,
+                    },
+                    "session": {
+                        "access_token": response.session.access_token,
+                        "refresh_token": response.session.refresh_token,
+                        "expires_at": response.session.expires_at,
+                    }
+                }
+            else:
+                raise ValueError("Failed to exchange code for session")
+
+        except Exception as e:
+            error_msg = str(e)
+            raise ValueError(f"Code exchange failed: {error_msg}")
+
 
 @lru_cache()
 def get_auth_service() -> AuthService:

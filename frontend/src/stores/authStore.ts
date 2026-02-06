@@ -117,7 +117,7 @@ export const useAuthStore = create<AuthState>()(
       handleOAuthCallback: async () => {
         set({ isLoading: true, error: null });
         try {
-          const tokens = authApi.handleOAuthCallback();
+          const tokens = await authApi.handleOAuthCallback();
           if (tokens) {
             const user = await userApi.getProfile();
             set({ user, isAuthenticated: true, isLoading: false });

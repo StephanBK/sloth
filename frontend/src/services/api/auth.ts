@@ -44,21 +44,43 @@ export const authApi = {
   },
 
   /**
-   * Handle OAuth callback - extract tokens from URL hash
-   * Supabase returns tokens in the URL fragment after Google auth
+   * Handle OAuth callback - exchange code for tokens
+   * After Google OAuth, Supabase redirects with a code parameter
    */
-  handleOAuthCallback: (): { accessToken: string; refreshToken: string } | null => {
+  handleOAuthCallback: async (): Promise<{ accessToken: string; refreshToken: string } | null> => {
+    // First check for tokens in URL hash (implicit flow)
     const hash = window.location.hash;
-    if (!hash) return null;
+    if (hash) {
+      const hashParams = new URLSearchParams(hash.substring(1));
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
 
-    const params = new URLSearchParams(hash.substring(1));
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-
-    if (accessToken && refreshToken) {
-      setTokens(accessToken, refreshToken);
-      return { accessToken, refreshToken };
+      if (accessToken && refreshToken) {
+        setTokens(accessToken, refreshToken);
+        return { accessToken, refreshToken };
+      }
     }
+
+    // Check for authorization code in URL params (code flow)
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
+      try {
+        const response = await apiClient.post<AuthResponse>('/auth/callback', { code });
+        if (response.data.session) {
+          setTokens(response.data.session.access_token, response.data.session.refresh_token);
+          return {
+            accessToken: response.data.session.access_token,
+            refreshToken: response.data.session.refresh_token,
+          };
+        }
+      } catch (error) {
+        console.error('Failed to exchange code for tokens:', error);
+        return null;
+      }
+    }
+
     return null;
   },
 

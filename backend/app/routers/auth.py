@@ -22,6 +22,7 @@ from app.schemas.auth import (
     RefreshTokenRequest,
     PasswordResetRequest,
     GoogleOAuthRequest,
+    OAuthCodeExchangeRequest,
     AuthResponse,
     TokenRefreshResponse,
     GoogleOAuthResponse,
@@ -203,6 +204,48 @@ async def google_oauth(
     try:
         url = auth_service.get_google_oauth_url(request.redirect_url)
         return GoogleOAuthResponse(url=url)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.post(
+    "/callback",
+    response_model=AuthResponse,
+    summary="Exchange OAuth code for tokens",
+)
+async def oauth_callback(
+    request: OAuthCodeExchangeRequest,
+    auth_service: AuthService = Depends(get_auth_service),
+):
+    """
+    Exchange an OAuth authorization code for session tokens.
+
+    LEARNING NOTE:
+    After Google OAuth, the user is redirected back with a `code` parameter.
+    This endpoint exchanges that code for actual session tokens.
+
+    **Flow:**
+    1. User completes Google sign-in
+    2. Google redirects to your callback URL with ?code=...
+    3. Frontend calls this endpoint with the code
+    4. Backend exchanges code for tokens via Supabase
+    5. Returns tokens to frontend
+    """
+    if not auth_service.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Authentication service not configured"
+        )
+
+    try:
+        result = await auth_service.exchange_code_for_session(request.code)
+        return AuthResponse(
+            user=result["user"],
+            session=result["session"]
+        )
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
