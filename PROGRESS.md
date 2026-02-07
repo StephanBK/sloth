@@ -4,9 +4,9 @@
 
 ---
 
-## Current Status: Phase 7 - DEPLOYED TO PRODUCTION! 🚀
+## Current Status: Phase 8 - PRODUCTION WITH GOOGLE AUTH! 🚀
 
-**Last Updated:** February 5, 2026
+**Last Updated:** February 7, 2026
 
 ---
 
@@ -50,7 +50,7 @@
 - [x] Supabase project created and credentials added to .env
 - [x] **Email/password registration tested and working!**
 - [x] **Email/password login tested and working!**
-- [x] **Google OAuth added!** (Session 7)
+- [x] **Google OAuth added!** (Session 7, fixed Session 10)
 
 ### User Profile & Weight Tracking (Session 3 - COMPLETE)
 - [x] Updated User model with profile fields
@@ -222,8 +222,9 @@
 ## Up Next
 
 ### Production Setup (Priority)
-- [ ] Set up Stripe products and prices in Stripe Dashboard
-- [ ] Set up Google OAuth in Supabase Dashboard (enable Google provider)
+- [x] Set up Stripe products and prices in Stripe Dashboard ✅
+- [x] Set up Google OAuth in Supabase Dashboard ✅
+- [x] Google OAuth working end-to-end in production ✅
 - [ ] Configure Stripe webhooks pointing to Railway backend
 - [ ] Test full payment flow in production
 
@@ -231,6 +232,7 @@
 - [ ] Add form validation feedback
 - [ ] Dashboard page improvements (quick stats, today's meals)
 - [ ] Dark mode support
+- [ ] Improve Google OAuth consent screen (add logo, verify app)
 
 ### Optional Enhancements
 - [ ] Grocery list feature (generate shopping list from meal plan)
@@ -466,9 +468,19 @@ sloth/
   - Added `OAuthCodeExchangeRequest` schema
   - Updated frontend `handleOAuthCallback` to handle both implicit and code flow
   - Updated `AuthCallbackPage.tsx` to check both hash and query params for errors
-- **Current Status:** OAuth flow working through Google → Supabase → frontend redirect
-  - Debugging: Frontend should now POST to backend /auth/callback with code
-  - Waiting for Vercel to deploy latest commit (9679ce6)
+- **Status at end of session:** OAuth code exchange still failing (PKCE issue)
+
+### Session 10 - February 7, 2026
+- **Google OAuth Fixed! ✅**
+  - **Root cause:** Supabase Python SDK defaults to PKCE flow, which stores `code_verifier` in in-memory storage. On Railway (production), this is unreliable - process restarts or multiple workers lose the verifier, causing "invalid flow state" errors on code exchange.
+  - **Fix:** Switched Supabase client to `implicit` flow via `ClientOptions(flow_type="implicit")` in `auth_service.py`
+  - With implicit flow, tokens come back directly in the URL hash (`#access_token=...&refresh_token=...`) - no backend code exchange needed
+  - Frontend already handled this path (`auth.ts:51-62`), so no frontend changes required
+  - **Google OAuth tested and confirmed working in production! ✅**
+- **All auth methods now working:**
+  - Email/password login ✅
+  - Email/password registration ✅
+  - Google OAuth login ✅
 
 ---
 
@@ -480,11 +492,11 @@ sloth/
 ```
 Read /Users/stephanketterer/sloth/PROGRESS.md and continue where we left off.
 I want to work on [choose one]:
-- Option A: Set up Stripe products and webhooks in production
-- Option B: Set up Google OAuth in Supabase
-- Option C: Test full payment flow end-to-end
-- Option D: Add grocery list feature
-- Option E: Work on frontend polish
+- Option A: Configure Stripe webhooks and test payment flow
+- Option B: Improve dashboard (quick stats, today's meals)
+- Option C: Add grocery list feature
+- Option D: Work on frontend polish and form validation
+- Option E: Dark mode support
 ```
 
 ### Production URLs (LIVE!)
@@ -511,7 +523,7 @@ Then open http://localhost:5173 in your browser!
 ## Current State Summary (for Claude)
 
 **Project:** Sloth - Meal planning SaaS (Faultierdiät)
-**Completion:** DEPLOYED! 🎉 (Production ready, needs Stripe/OAuth config)
+**Completion:** DEPLOYED! 🎉 (Auth fully working, needs Stripe webhooks)
 **Working directory:** /Users/stephanketterer/sloth
 
 **Production URLs:**
@@ -522,7 +534,7 @@ Then open http://localhost:5173 in your browser!
 **What's working:**
 - ✅ PostgreSQL database with all tables (via Supabase)
 - ✅ FastAPI backend with all endpoints (on Railway)
-- ✅ Supabase authentication (email/password working!)
+- ✅ Supabase authentication (email/password + Google OAuth working!)
 - ✅ React frontend with all core pages (on Vercel)
 - ✅ **Login flow works end-to-end in production!**
 - ✅ User redirected to intake form after first login
@@ -536,7 +548,7 @@ Then open http://localhost:5173 in your browser!
 
 **Needs Setup:**
 - ✅ Stripe products/prices in Stripe Dashboard (DONE!)
-- ⏳ Google OAuth - debugging code exchange (backend endpoint added, testing deployment)
+- ✅ Google OAuth - WORKING! (implicit flow fix, Session 10)
 - ⏳ Stripe webhooks pointing to Railway
 
 **Railway Environment Variables (configured):**
