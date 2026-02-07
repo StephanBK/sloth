@@ -17,7 +17,7 @@ We use Supabase for auth because:
 TUTORIAL: https://supabase.com/docs/guides/auth
 """
 
-from supabase import create_client, Client
+from supabase import create_client, Client, ClientOptions
 from functools import lru_cache
 from typing import Optional
 from jose import jwt, JWTError
@@ -45,9 +45,13 @@ class AuthService:
         # LEARNING NOTE: The anon key is safe to use client-side
         # It only allows operations permitted by your Row Level Security policies
         if self.supabase_url and self.supabase_anon_key:
+            # Use implicit flow for OAuth so tokens come back directly in URL hash.
+            # PKCE flow doesn't work reliably server-side because the code_verifier
+            # is stored in-memory and lost on process restarts or with multiple workers.
             self.client: Client = create_client(
                 self.supabase_url,
-                self.supabase_anon_key
+                self.supabase_anon_key,
+                options=ClientOptions(flow_type="implicit"),
             )
         else:
             self.client = None
