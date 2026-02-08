@@ -4,9 +4,9 @@
 
 ---
 
-## Current Status: Phase 9 - DASHBOARD, GROCERY LIST & POLISH! 🚀
+## Current Status: Phase 10 - STRIPE LIVE & FULLY WIRED! 🚀
 
-**Last Updated:** February 7, 2026
+**Last Updated:** February 8, 2026
 
 ---
 
@@ -225,9 +225,9 @@
 - [x] Set up Stripe products and prices in Stripe Dashboard ✅
 - [x] Set up Google OAuth in Supabase Dashboard ✅
 - [x] Google OAuth working end-to-end in production ✅
-- [ ] Configure Stripe webhooks pointing to Railway backend
-- [ ] Add Stripe env vars to Railway (STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, FRONTEND_URL)
-- [ ] Test full payment flow in production
+- [x] Configure Stripe webhooks pointing to Railway backend ✅
+- [x] Add Stripe env vars to Railway (STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, FRONTEND_URL) ✅
+- [ ] Test full payment flow with a real customer
 
 ### Completed Polish ✅
 - [x] Form validation feedback (inline validation, strength meter, match indicator)
@@ -509,6 +509,11 @@ sloth/
   - Both pages: `noValidate` for custom UX, `aria-invalid` + `aria-describedby` for accessibility, auto-clear server errors on input change
   - CSS: password strength bar with color transitions, `.spinner` animation, `.btn-loading` layout, `.auth-error-icon`, `.form-success` with fadeSlideIn animation
 - **Build verified passing** ✅
+- **Stripe Webhooks Configured:**
+  - Added STRIPE_SECRET_KEY (live), STRIPE_WEBHOOK_SECRET, FRONTEND_URL to Railway
+  - Created webhook endpoint in Stripe Dashboard → `https://sloth-production.up.railway.app/subscriptions/webhook`
+  - Listening to 5 events: checkout.session.completed, customer.subscription.updated, customer.subscription.deleted, invoice.payment_succeeded, invoice.payment_failed
+  - Endpoint active and verified reachable
 
 ---
 
@@ -551,7 +556,7 @@ Then open http://localhost:5173 in your browser!
 ## Current State Summary (for Claude)
 
 **Project:** Sloth - Meal planning SaaS (Faultierdiät)
-**Completion:** DEPLOYED! 🎉 (Auth + Dashboard + Grocery + Polish done, needs Stripe webhooks)
+**Completion:** FULLY DEPLOYED! 🎉 (Auth + Payments + Dashboard + Grocery + Polish — all wired up)
 **Working directory:** /Users/stephanketterer/sloth
 
 **Production URLs:**
@@ -580,7 +585,7 @@ Then open http://localhost:5173 in your browser!
 **Needs Setup:**
 - ✅ Stripe products/prices in Stripe Dashboard (DONE!)
 - ✅ Google OAuth - WORKING! (implicit flow fix, Session 10)
-- ⏳ Stripe webhooks pointing to Railway
+- ✅ Stripe webhooks configured and active!
 
 **Railway Environment Variables (configured):**
 - SUPABASE_URL=https://wetlgbumumghqavzwzqh.supabase.co
