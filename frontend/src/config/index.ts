@@ -43,6 +43,7 @@ export const ROUTES = {
   intake: '/intake',
   weight: '/weight',
   meals: '/meals',
+  grocery: '/grocery',
   profile: '/profile',
   subscription: '/subscription',
   subscriptionSuccess: '/subscription/success',

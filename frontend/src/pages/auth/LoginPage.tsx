@@ -2,34 +2,75 @@
  * Login Page
  *
  * LEARNING NOTE:
- * This is a controlled form in React.
- * - useState manages form input values
+ * This is a controlled form in React with inline validation.
+ * - useState manages form input values and validation state
  * - onChange updates state on each keystroke
  * - onSubmit handles form submission
+ * - Inline validation gives immediate feedback
  *
  * We use the authStore for login logic and error handling.
  *
  * TUTORIAL: https://react.dev/reference/react-dom/components/form
  */
 
-import { useState, type FormEvent } from 'react';
+import { useState, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
+
+/** Simple email regex for inline validation */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginPage() {
   // Form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Touch tracking – only show errors after user has interacted
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
   // Auth store
   const { login, loginWithGoogle, isLoading, error, clearError } = useAuthStore();
 
-  /**
-   * Handle form submission
-   */
+  // ── Validation helpers ──────────────────────────────────────────────
+  const emailError = touched.email && email.length > 0 && !EMAIL_REGEX.test(email)
+    ? 'Bitte eine gültige E-Mail eingeben'
+    : '';
+
+  const passwordError = touched.password && password.length > 0 && password.length < 6
+    ? 'Passwort ist zu kurz'
+    : '';
+
+  const isFormValid = EMAIL_REGEX.test(email) && password.length >= 6;
+
+  // ── Handlers ────────────────────────────────────────────────────────
+  const handleBlur = useCallback((field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }, []);
+
+  const handleEmailChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+      if (error) clearError();
+    },
+    [error, clearError],
+  );
+
+  const handlePasswordChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+      if (error) clearError();
+    },
+    [error, clearError],
+  );
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     clearError();
+
+    // Mark all fields touched on submit attempt
+    setTouched({ email: true, password: true });
+
+    if (!isFormValid) return;
 
     try {
       await login(email, password);
@@ -39,9 +80,6 @@ export default function LoginPage() {
     }
   };
 
-  /**
-   * Handle Google login
-   */
   const handleGoogleLogin = async () => {
     clearError();
     try {
@@ -55,17 +93,26 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        {/* Logo/Header */}
+        {/* Logo / Header */}
         <div className="auth-logo">
           <h1>Sloth</h1>
           <p>Willkommen zurück!</p>
         </div>
 
-        {/* Error message */}
-        {error && <div className="auth-error">{error}</div>}
+        {/* Server error */}
+        {error && (
+          <div className="auth-error" role="alert">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="auth-error-icon">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M8 4.5v4M8 10.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            {error}
+          </div>
+        )}
 
         {/* Login form */}
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          {/* Email */}
           <div className="form-group">
             <label className="form-label" htmlFor="email">
               E-Mail
@@ -73,16 +120,25 @@ export default function LoginPage() {
             <input
               id="email"
               type="email"
-              className="form-input"
+              className={`form-input${emailError ? ' error' : ''}`}
               placeholder="deine@email.de"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              onBlur={() => handleBlur('email')}
               required
               autoComplete="email"
               disabled={isLoading}
+              aria-invalid={!!emailError}
+              aria-describedby={emailError ? 'email-error' : undefined}
             />
+            {emailError && (
+              <span id="email-error" className="form-error" role="alert">
+                {emailError}
+              </span>
+            )}
           </div>
 
+          {/* Password */}
           <div className="form-group">
             <label className="form-label" htmlFor="password">
               Passwort
@@ -90,22 +146,37 @@ export default function LoginPage() {
             <input
               id="password"
               type="password"
-              className="form-input"
+              className={`form-input${passwordError ? ' error' : ''}`}
               placeholder="Dein Passwort"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
+              onBlur={() => handleBlur('password')}
               required
               autoComplete="current-password"
               disabled={isLoading}
+              aria-invalid={!!passwordError}
+              aria-describedby={passwordError ? 'password-error' : undefined}
             />
+            {passwordError && (
+              <span id="password-error" className="form-error" role="alert">
+                {passwordError}
+              </span>
+            )}
           </div>
 
           <button
             type="submit"
             className="btn btn-primary btn-full btn-lg"
-            disabled={isLoading}
+            disabled={isLoading || (!isFormValid && touched.email && touched.password)}
           >
-            {isLoading ? 'Anmelden...' : 'Anmelden'}
+            {isLoading ? (
+              <span className="btn-loading">
+                <span className="spinner" />
+                Anmelden…
+              </span>
+            ) : (
+              'Anmelden'
+            )}
           </button>
         </form>
 
@@ -130,7 +201,7 @@ export default function LoginPage() {
           Mit Google anmelden
         </button>
 
-        {/* Footer links */}
+        {/* Footer */}
         <div className="auth-footer">
           <p>
             Noch kein Konto?{' '}

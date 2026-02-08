@@ -25,6 +25,7 @@ import WeightPage from '@/pages/weight/WeightPage';
 import MealsPage from '@/pages/meals/MealsPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import SubscriptionPage from '@/pages/subscription/SubscriptionPage';
+import GroceryListPage from '@/pages/grocery/GroceryListPage';
 
 // Components
 import BottomNav from '@/components/layout/BottomNav';
@@ -151,6 +152,7 @@ function AppRoutes() {
         <Route path={ROUTES.weight} element={<WeightPage />} />
         <Route path={ROUTES.meals} element={<MealsPage />} />
         <Route path={ROUTES.profile} element={<ProfilePage />} />
+        <Route path={ROUTES.grocery} element={<GroceryListPage />} />
         <Route path={ROUTES.subscription} element={<SubscriptionPage />} />
         <Route path={ROUTES.subscriptionSuccess} element={<SubscriptionPage />} />
         <Route path={ROUTES.subscriptionCancelled} element={<SubscriptionPage />} />

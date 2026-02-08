@@ -1872,3 +1872,835 @@ body {
   color: var(--color-success);
   font-size: 0.875rem;
 }
+
+/* =============================================================================
+   New Dashboard Styles (Sleek Redesign)
+   ============================================================================= */
+
+.dash-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.dash-greeting {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  margin-bottom: 2px;
+}
+
+.dash-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+}
+
+.dash-level-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  min-width: 52px;
+}
+
+.dash-level-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dash-level-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.85;
+}
+
+/* Progress Card */
+.dash-progress-card {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-md);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.dash-progress-card:active {
+  transform: scale(0.99);
+}
+
+.dash-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.dash-progress-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+}
+
+.dash-progress-percent {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.dash-progress-bar-container {
+  margin-bottom: var(--spacing-md);
+}
+
+.dash-progress-bar {
+  height: 8px;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.dash-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-light), var(--color-success));
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.dash-weight-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dash-weight-item {
+  text-align: center;
+  flex: 1;
+}
+
+.dash-weight-item.current .dash-weight-value {
+  color: var(--color-primary);
+  font-size: 1.25rem;
+}
+
+.dash-weight-value {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+}
+
+.dash-weight-label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--color-gray-400);
+  margin-top: 2px;
+}
+
+.dash-weight-lost {
+  text-align: center;
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-gray-100);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+/* Quick Weight Entry */
+.dash-quick-weight {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-md);
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.1s;
+  border: 1px solid var(--color-gray-100);
+}
+
+.dash-quick-weight:active {
+  transform: scale(0.99);
+}
+
+.dash-quick-weight-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  border-radius: var(--radius-lg);
+  color: white;
+  flex-shrink: 0;
+}
+
+.dash-quick-weight-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.dash-quick-weight-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-quick-weight-text strong {
+  font-size: 0.9rem;
+  color: var(--color-gray-800);
+}
+
+.dash-quick-weight-text span {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+}
+
+.dash-chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--color-gray-300);
+  flex-shrink: 0;
+}
+
+/* Today's Meals Card */
+.dash-meals-card {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.dash-meals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.dash-meals-header h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-900);
+}
+
+.dash-meals-kcal {
+  font-size: 0.8rem;
+  color: var(--color-gray-500);
+  margin-top: 2px;
+}
+
+.dash-meals-all-btn {
+  background: var(--color-gray-100);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.dash-meals-all-btn:hover {
+  background: var(--color-gray-200);
+}
+
+/* Macro bars */
+.dash-meals-macros {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.dash-macro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dash-macro-bar {
+  height: 4px;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-full);
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-macro-bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: var(--macro-pct);
+  background: var(--macro-color);
+  border-radius: var(--radius-full);
+}
+
+.dash-macro span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+}
+
+.dash-macro label {
+  font-size: 0.65rem;
+  color: var(--color-gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Meal items list */
+.dash-meals-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.dash-meal-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+
+.dash-meal-item.active {
+  background: rgba(79, 121, 66, 0.06);
+  border-left: 3px solid var(--color-primary);
+}
+
+.dash-meal-emoji {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+.dash-meal-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 80px;
+}
+
+.dash-meal-info strong {
+  font-size: 0.85rem;
+  color: var(--color-gray-800);
+}
+
+.dash-meal-info span {
+  font-size: 0.7rem;
+  color: var(--color-gray-400);
+}
+
+.dash-meal-detail {
+  flex: 1;
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Quick Actions Grid */
+.dash-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.dash-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-sm);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s;
+  border: 1px solid var(--color-gray-100);
+}
+
+.dash-action-card:active {
+  transform: scale(0.96);
+}
+
+.dash-action-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+}
+
+.dash-action-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.dash-action-card span {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-gray-600);
+  text-align: center;
+}
+
+/* Weight success animation */
+.dash-weight-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+}
+
+.dash-weight-success p {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+/* =============================================================================
+   Grocery List Page Styles
+   ============================================================================= */
+
+.grocery-page {
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  padding-bottom: calc(var(--spacing-xl) + 70px);
+}
+
+.grocery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.grocery-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.grocery-count {
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Day selector */
+.grocery-day-selector {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.grocery-day-label {
+  font-size: 0.8rem;
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+}
+
+.grocery-days {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.grocery-day-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-gray-200);
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.grocery-day-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.grocery-day-btn:hover:not(.active) {
+  border-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.grocery-day-presets {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.grocery-preset-btn {
+  background: var(--color-gray-100);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.grocery-preset-btn:hover {
+  background: var(--color-gray-200);
+}
+
+/* Grocery loading */
+.grocery-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  color: var(--color-gray-500);
+}
+
+/* Progress bar */
+.grocery-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.grocery-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-gray-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.grocery-progress-fill {
+  height: 100%;
+  background: var(--color-success);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.grocery-clear-btn {
+  background: none;
+  border: none;
+  color: var(--color-gray-400);
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.grocery-clear-btn:hover {
+  color: var(--color-gray-600);
+}
+
+/* Grocery list */
+.grocery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.grocery-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid var(--color-gray-50);
+}
+
+.grocery-item:last-child {
+  border-bottom: none;
+}
+
+.grocery-item:active {
+  background: var(--color-gray-50);
+}
+
+.grocery-item.checked {
+  opacity: 0.5;
+}
+
+.grocery-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-gray-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.grocery-checkbox.checked {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.grocery-checkbox svg {
+  width: 14px;
+  height: 14px;
+}
+
+.grocery-item-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.grocery-item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-gray-800);
+}
+
+.grocery-item.checked .grocery-item-name {
+  text-decoration: line-through;
+}
+
+.grocery-item-amount {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+}
+
+.grocery-summary {
+  text-align: center;
+  padding: var(--spacing-lg);
+  font-size: 0.85rem;
+  color: var(--color-gray-500);
+}
+
+.grocery-summary strong {
+  color: var(--color-gray-700);
+}
+
+/* Grocery empty state */
+.grocery-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--color-gray-500);
+}
+
+.grocery-empty h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.grocery-empty p {
+  font-size: 0.875rem;
+}
+
+/* =============================================================================
+   Form Validation & Polish
+   ============================================================================= */
+
+/* Success state for inputs */
+.form-input.success {
+  border-color: var(--color-success);
+}
+
+.form-input.success:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.form-success {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-xs);
+  font-size: 0.8rem;
+  color: var(--color-success);
+  animation: fadeSlideIn 0.2s ease;
+}
+
+.form-error {
+  display: block;
+  animation: fadeSlideIn 0.2s ease;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Auth error with icon */
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.auth-error-icon {
+  flex-shrink: 0;
+}
+
+/* Password strength meter */
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: 6px;
+}
+
+.password-strength-track {
+  flex: 1;
+  height: 4px;
+  background: var(--color-gray-200);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.password-strength-bar.strength-weak {
+  background-color: var(--color-error);
+}
+
+.password-strength-bar.strength-medium {
+  background-color: var(--color-warning);
+}
+
+.password-strength-bar.strength-strong {
+  background-color: var(--color-success);
+}
+
+.password-strength-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  min-width: 48px;
+  text-align: right;
+}
+
+.password-strength-label.strength-weak {
+  color: var(--color-error);
+}
+
+.password-strength-label.strength-medium {
+  color: var(--color-warning);
+}
+
+.password-strength-label.strength-strong {
+  color: var(--color-success);
+}
+
+/* Loading spinner for buttons */
+.btn-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile adjustments for new components */
+@media (max-width: 640px) {
+  .dash-name {
+    font-size: 1.5rem;
+  }
+
+  .dash-actions {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xs);
+  }
+
+  .dash-action-card {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+
+  .dash-action-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .dash-action-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .dash-action-card span {
+    font-size: 0.6rem;
+  }
+
+  .dash-meal-detail {
+    display: none;
+  }
+
+  .grocery-page {
+    padding: var(--spacing-md);
+    padding-bottom: calc(var(--spacing-xl) + 70px);
+  }
+
+  .grocery-day-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .grocery-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}

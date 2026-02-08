@@ -3,55 +3,125 @@
  *
  * LEARNING NOTE:
  * Similar to LoginPage, but for new user registration.
- * We add password confirmation for better UX.
+ * Features inline validation with:
+ * - Email format check
+ * - Password strength meter (weak / medium / strong)
+ * - Password confirmation match indicator
  *
  * After successful registration, user is automatically
  * redirected to the intake form.
  */
 
-import { useState, type FormEvent } from 'react';
+import { useState, useMemo, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
+
+/** Simple email regex for inline validation */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Password strength levels */
+type StrengthLevel = 'none' | 'weak' | 'medium' | 'strong';
+
+interface PasswordStrength {
+  level: StrengthLevel;
+  label: string;
+  percent: number;
+}
+
+/** Calculate password strength */
+function getPasswordStrength(pw: string): PasswordStrength {
+  if (pw.length === 0) return { level: 'none', label: '', percent: 0 };
+
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+
+  if (score <= 1) return { level: 'weak', label: 'Schwach', percent: 33 };
+  if (score <= 3) return { level: 'medium', label: 'Mittel', percent: 66 };
+  return { level: 'strong', label: 'Stark', percent: 100 };
+}
 
 export default function RegisterPage() {
   // Form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [validationError, setValidationError] = useState('');
+
+  // Touch tracking
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   // Auth store
   const { register, loginWithGoogle, isLoading, error, clearError } = useAuthStore();
 
-  /**
-   * Validate form before submission
-   */
-  const validateForm = (): boolean => {
-    setValidationError('');
+  // ── Derived validation ──────────────────────────────────────────────
+  const emailError =
+    touched.email && email.length > 0 && !EMAIL_REGEX.test(email)
+      ? 'Bitte eine gültige E-Mail eingeben'
+      : '';
 
-    if (password.length < 8) {
-      setValidationError('Passwort muss mindestens 8 Zeichen lang sein');
-      return false;
-    }
+  const passwordStrength = useMemo(() => getPasswordStrength(password), [password]);
 
-    if (password !== confirmPassword) {
-      setValidationError('Passwörter stimmen nicht überein');
-      return false;
-    }
+  const passwordTooShort =
+    touched.password && password.length > 0 && password.length < 8;
 
-    return true;
-  };
+  const confirmError =
+    touched.confirmPassword &&
+    confirmPassword.length > 0 &&
+    password !== confirmPassword
+      ? 'Passwörter stimmen nicht überein'
+      : '';
 
-  /**
-   * Handle form submission
-   */
+  const confirmMatch =
+    touched.confirmPassword &&
+    confirmPassword.length > 0 &&
+    password === confirmPassword &&
+    password.length >= 8;
+
+  const isFormValid =
+    EMAIL_REGEX.test(email) &&
+    password.length >= 8 &&
+    password === confirmPassword;
+
+  // ── Handlers ────────────────────────────────────────────────────────
+  const handleBlur = useCallback((field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }, []);
+
+  const handleEmailChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+      if (error) clearError();
+    },
+    [error, clearError],
+  );
+
+  const handlePasswordChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+      if (error) clearError();
+    },
+    [error, clearError],
+  );
+
+  const handleConfirmChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setConfirmPassword(e.target.value);
+      if (error) clearError();
+    },
+    [error, clearError],
+  );
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     clearError();
 
-    if (!validateForm()) {
-      return;
-    }
+    // Touch all fields on submit
+    setTouched({ email: true, password: true, confirmPassword: true });
+
+    if (!isFormValid) return;
 
     try {
       await register(email, password);
@@ -61,12 +131,8 @@ export default function RegisterPage() {
     }
   };
 
-  /**
-   * Handle Google sign up
-   */
   const handleGoogleSignup = async () => {
     clearError();
-    setValidationError('');
     try {
       await loginWithGoogle();
       // User will be redirected to Google
@@ -75,23 +141,29 @@ export default function RegisterPage() {
     }
   };
 
-  // Combined error message
-  const displayError = validationError || error;
-
   return (
     <div className="auth-page">
       <div className="auth-card">
-        {/* Logo/Header */}
+        {/* Logo / Header */}
         <div className="auth-logo">
           <h1>Sloth</h1>
           <p>Starte deine Faultierdiät</p>
         </div>
 
-        {/* Error message */}
-        {displayError && <div className="auth-error">{displayError}</div>}
+        {/* Server error */}
+        {error && (
+          <div className="auth-error" role="alert">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="auth-error-icon">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M8 4.5v4M8 10.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            {error}
+          </div>
+        )}
 
         {/* Register form */}
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          {/* Email */}
           <div className="form-group">
             <label className="form-label" htmlFor="email">
               E-Mail
@@ -99,16 +171,25 @@ export default function RegisterPage() {
             <input
               id="email"
               type="email"
-              className="form-input"
+              className={`form-input${emailError ? ' error' : ''}`}
               placeholder="deine@email.de"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              onBlur={() => handleBlur('email')}
               required
               autoComplete="email"
               disabled={isLoading}
+              aria-invalid={!!emailError}
+              aria-describedby={emailError ? 'reg-email-error' : undefined}
             />
+            {emailError && (
+              <span id="reg-email-error" className="form-error" role="alert">
+                {emailError}
+              </span>
+            )}
           </div>
 
+          {/* Password */}
           <div className="form-group">
             <label className="form-label" htmlFor="password">
               Passwort
@@ -116,17 +197,40 @@ export default function RegisterPage() {
             <input
               id="password"
               type="password"
-              className="form-input"
+              className={`form-input${passwordTooShort ? ' error' : ''}`}
               placeholder="Mindestens 8 Zeichen"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
+              onBlur={() => handleBlur('password')}
               required
               minLength={8}
               autoComplete="new-password"
               disabled={isLoading}
+              aria-invalid={!!passwordTooShort}
+              aria-describedby="password-strength"
             />
+            {/* Strength meter */}
+            {password.length > 0 && (
+              <div className="password-strength" id="password-strength">
+                <div className="password-strength-track">
+                  <div
+                    className={`password-strength-bar strength-${passwordStrength.level}`}
+                    style={{ width: `${passwordStrength.percent}%` }}
+                  />
+                </div>
+                <span className={`password-strength-label strength-${passwordStrength.level}`}>
+                  {passwordStrength.label}
+                </span>
+              </div>
+            )}
+            {passwordTooShort && (
+              <span className="form-error" role="alert">
+                Mindestens 8 Zeichen erforderlich
+              </span>
+            )}
           </div>
 
+          {/* Confirm Password */}
           <div className="form-group">
             <label className="form-label" htmlFor="confirmPassword">
               Passwort bestätigen
@@ -134,22 +238,52 @@ export default function RegisterPage() {
             <input
               id="confirmPassword"
               type="password"
-              className="form-input"
+              className={`form-input${confirmError ? ' error' : ''}${confirmMatch ? ' success' : ''}`}
               placeholder="Passwort wiederholen"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmChange}
+              onBlur={() => handleBlur('confirmPassword')}
               required
               autoComplete="new-password"
               disabled={isLoading}
+              aria-invalid={!!confirmError}
+              aria-describedby={
+                confirmError
+                  ? 'confirm-error'
+                  : confirmMatch
+                    ? 'confirm-match'
+                    : undefined
+              }
             />
+            {confirmError && (
+              <span id="confirm-error" className="form-error" role="alert">
+                {confirmError}
+              </span>
+            )}
+            {confirmMatch && (
+              <span id="confirm-match" className="form-success" role="status">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ marginRight: 4, verticalAlign: '-2px' }}>
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M4.5 7l2 2 3-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Passwörter stimmen überein
+              </span>
+            )}
           </div>
 
           <button
             type="submit"
             className="btn btn-primary btn-full btn-lg"
-            disabled={isLoading}
+            disabled={isLoading || (!isFormValid && touched.email && touched.password)}
           >
-            {isLoading ? 'Registrieren...' : 'Konto erstellen'}
+            {isLoading ? (
+              <span className="btn-loading">
+                <span className="spinner" />
+                Registrieren…
+              </span>
+            ) : (
+              'Konto erstellen'
+            )}
           </button>
         </form>
 
@@ -174,7 +308,7 @@ export default function RegisterPage() {
           Mit Google registrieren
         </button>
 
-        {/* Footer links */}
+        {/* Footer */}
         <div className="auth-footer">
           <p>
             Bereits registriert?{' '}
