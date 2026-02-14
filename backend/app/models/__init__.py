@@ -13,6 +13,7 @@ from app.models.user import User
 from app.models.meal_plan import MealPlan, Meal, Ingredient
 from app.models.progress import WeightEntry
 from app.models.preference import UserPreference
+from app.models.product import Product, ProductAvailability, ProductAlternative
 
 # This list is used by Alembic to detect all models
 __all__ = [
@@ -22,4 +23,7 @@ __all__ = [
     "Ingredient",
     "WeightEntry",
     "UserPreference",
+    "Product",
+    "ProductAvailability",
+    "ProductAlternative",
 ]

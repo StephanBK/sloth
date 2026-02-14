@@ -1,0 +1,117 @@
+# Sloth Diet - Core Products List
+# Manually curated from Männer Pläne
+# Date: 2025-02-14
+
+# This file lists the ~50 core products used across all meal plans
+# Format: Category | Product Name | Typical Package Size | Brand | Notes
+
+# ==============================================================================
+# DAIRY & EGGS
+# ==============================================================================
+
+Dairy | ja! Skyr natur | 500g | ja! | Used in 12+ meal plans
+Dairy | ja! Magerquark | 500g | ja! | Used in 10+ meal plans
+Dairy | REWE Beste Wahl High Protein Quarkcreme | 200g | REWE Beste Wahl | Various flavors, used in 19+ plans
+Dairy | REWE Beste Wahl High Protein Pudding | 200g | REWE Beste Wahl | Various flavors, used in 11+ plans
+Dairy | ja! Kräuterquark leicht | 200g | ja! | Used in multiple plans
+Dairy | Eier Größe M | per piece | Generic | Used in 6+ plans
+Dairy | Dr. Oetker High Protein Shake | 330ml | Dr. Oetker | Various flavors
+
+# ==============================================================================
+# PROTEIN - MEAT & FISH
+# ==============================================================================
+
+Protein | Wilhelm Brandenburg Hähnchen Minutenschnitzel | 400g | Wilhelm Brandenburg | Chicken breast, used in 10+ plans
+Protein | ja! Rinder Minutensteak | 320g | ja! | Beef steak, used in 4+ plans
+Protein | ja! Lachsfilets | 250g | ja! | Salmon, used in 3+ plans
+Protein | Wilhelm Brandenburg Rinderhack 5% | 180g | Wilhelm Brandenburg | Lean ground beef
+
+# ==============================================================================
+# PROTEIN - PLANT-BASED
+# ==============================================================================
+
+Protein | Rügenwalder Mühle veganes Mühlenhack | 180g | Rügenwalder Mühle | Vegan ground meat alternative
+Protein | Like Meat Like Grilled Chicken | 180g | Like Meat | Vegan chicken alternative
+Protein | Like Meat Like Gyros | 180g | Like Meat | Vegan gyros alternative
+Protein | REWE Bio Natur Tofu | 200g | REWE Bio | Plain tofu
+Protein | REWE Bio Räuchertofu | 175g | REWE Bio | Smoked tofu
+Protein | Salakis Feta Light | 180g | Salakis | Light feta cheese
+
+# ==============================================================================
+# GRAINS & CEREALS
+# ==============================================================================
+
+Grains | Ben's Original Spitzen Langkorn Reis | 125g pouch | Ben's Original | Pre-cooked rice, used heavily
+Grains | RUF Porridge Classic | 65g | RUF | Oatmeal
+Grains | Weetabix Original Biscuits | per piece | Weetabix | Breakfast cereal
+Grains | REWE Bio Reiswaffeln | 100g | REWE Bio | Rice cakes
+Grains | Wasa Tasty Snacks Rosemary & Sea Salt | 95g | Wasa | Crisp bread
+
+# ==============================================================================
+# VEGETABLES & FROZEN VEGETABLES
+# ==============================================================================
+
+Vegetables | REWE Bio Broccoli | 300g | REWE Bio | Fresh or frozen broccoli, used in 10+ plans
+Vegetables | REWE Cherry Romatomaten | 250g | REWE | Cherry tomatoes, used in 10+ plans
+Vegetables | REWE Bio Kaisergemüse | 450g | REWE Bio | Mixed vegetables
+Vegetables | REWE Beste Wahl Gemüsepfanne Asiatische Art | 500g | REWE Beste Wahl | Asian vegetable mix
+Vegetables | REWE Beste Wahl Gemüsepfanne französische Art | 500g | REWE Beste Wahl | French vegetable mix
+Vegetables | REWE Beste Wahl Wok Mix | 750g | REWE Beste Wahl | Wok vegetables
+
+# ==============================================================================
+# FROZEN MEALS & CONVENIENCE
+# ==============================================================================
+
+Frozen | Frosta Bami Goreng | 500g | Frosta | Frozen Asian noodle dish
+Frozen | Frosta Bami Goreng vegan | 450g | Frosta | Vegan version
+Frozen | Iglo Schlemmerfilet italiano | 380g | Iglo | Italian-style fish
+Frozen | McCain Country Potatoes Classic | 600g | McCain | Frozen potato wedges
+Frozen | REWE Bio Kartoffelpuffer | 360g (6x60g) | REWE Bio | Potato pancakes
+Frozen | REWE Beste Wahl Hähnchenpfanne Farfalle | 750g | REWE Beste Wahl | Chicken pasta dish
+Frozen | REWE Beste Wahl Hähnchen süß-sauer | 400g | REWE Beste Wahl | Sweet & sour chicken
+
+# ==============================================================================
+# CANNED & SHELF-STABLE
+# ==============================================================================
+
+Canned | REWE Beste Wahl Schwarze Bohnen in Chilisauce | 400g | REWE Beste Wahl | Black beans in chili sauce
+Canned | REWE Beste Wahl Chili Sin Carne | 400g | REWE Beste Wahl | Vegetarian chili
+Canned | REWE Beste Wahl Ananas Dessertstücke | 142g | REWE Beste Wahl | Pineapple chunks
+
+# ==============================================================================
+# FRUIT & SNACKS
+# ==============================================================================
+
+Fruit | REWE Beste Wahl Himbeer Heidelbeer Mix | 300g | REWE Beste Wahl | Raspberry blueberry mix, used in 19+ plans
+Fruit | Äpfel | per piece | Generic | Fresh apples
+Fruit | Bananen | per piece | Generic | Fresh bananas
+Fruit | Kiwi | per piece | Generic | Fresh kiwi
+Snacks | REWE Bio Mandeln | 30g portion | REWE Bio | Almonds
+
+# ==============================================================================
+# PANTRY ITEMS
+# ==============================================================================
+
+Pantry | Olivenöl | per tablespoon | Generic | Olive oil for cooking
+Pantry | Butterschmalz | per tablespoon | Generic | Clarified butter
+Pantry | Balsamico Essig | per tablespoon | Generic | Balsamic vinegar
+
+# ==============================================================================
+# SUMMARY
+# ==============================================================================
+
+Total Products: 52
+- Dairy & Eggs: 7
+- Protein (Meat/Fish): 4
+- Protein (Plant-based): 6
+- Grains & Cereals: 5
+- Vegetables: 6
+- Frozen Meals: 8
+- Canned: 3
+- Fruit & Snacks: 5
+- Pantry: 3
+
+Next Steps:
+1. Find EAN barcodes for each product
+2. Get exact nutritional data
+3. Import into database

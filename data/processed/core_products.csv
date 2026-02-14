@@ -1,0 +1,47 @@
+product_id,category,name,brand,package_size,unit,ean,notes
+1,Dairy & Eggs,ja! Skyr natur,ja!,500,g,,Used in 12+ meal plans
+2,Dairy & Eggs,ja! Magerquark,ja!,500,g,,Used in 10+ meal plans
+3,Dairy & Eggs,REWE Beste Wahl High Protein Quarkcreme,REWE Beste Wahl,200,g,,Various flavors - used in 19+ plans
+4,Dairy & Eggs,REWE Beste Wahl High Protein Pudding,REWE Beste Wahl,200,g,,Various flavors - used in 11+ plans
+5,Dairy & Eggs,ja! Kräuterquark leicht,ja!,200,g,,Herb quark
+6,Dairy & Eggs,Eier Größe M,Generic,1,piece,,Medium eggs
+7,Dairy & Eggs,Dr. Oetker High Protein Shake,Dr. Oetker,330,ml,,Various flavors
+8,Protein - Meat & Fish,Wilhelm Brandenburg Hähnchen Minutenschnitzel,Wilhelm Brandenburg,400,g,,Chicken breast - used in 10+ plans
+9,Protein - Meat & Fish,ja! Rinder Minutensteak,ja!,320,g,,Beef steak - used in 4+ plans
+10,Protein - Meat & Fish,ja! Lachsfilets,ja!,250,g,,Salmon fillets
+11,Protein - Meat & Fish,Wilhelm Brandenburg Rinderhack 5%,Wilhelm Brandenburg,180,g,,Lean ground beef
+12,Protein - Plant-based,Rügenwalder Mühle veganes Mühlenhack,Rügenwalder Mühle,180,g,,Vegan ground meat
+13,Protein - Plant-based,Like Meat Like Grilled Chicken,Like Meat,180,g,,Vegan chicken alternative
+14,Protein - Plant-based,Like Meat Like Gyros,Like Meat,180,g,,Vegan gyros
+15,Protein - Plant-based,REWE Bio Natur Tofu,REWE Bio,200,g,,Plain tofu
+16,Protein - Plant-based,REWE Bio Räuchertofu,REWE Bio,175,g,,Smoked tofu
+17,Protein - Plant-based,Salakis Feta Light,Salakis,180,g,,Light feta cheese
+18,Grains & Cereals,Ben's Original Spitzen Langkorn Reis,Ben's Original,125,g,,Pre-cooked rice pouch - heavily used
+19,Grains & Cereals,RUF Porridge Classic,RUF,65,g,,Oatmeal
+20,Grains & Cereals,Weetabix Original Biscuits,Weetabix,1,piece,,Breakfast cereal biscuit
+21,Grains & Cereals,REWE Bio Reiswaffeln,REWE Bio,100,g,,Rice cakes
+22,Grains & Cereals,Wasa Tasty Snacks Rosemary & Sea Salt,Wasa,95,g,,Crisp bread
+23,Vegetables & Frozen Veg,REWE Bio Broccoli,REWE Bio,300,g,,Fresh or frozen - used in 10+ plans
+24,Vegetables & Frozen Veg,REWE Cherry Romatomaten,REWE,250,g,,Cherry tomatoes - used in 10+ plans
+25,Vegetables & Frozen Veg,REWE Bio Kaisergemüse,REWE Bio,450,g,,Mixed vegetables
+26,Vegetables & Frozen Veg,REWE Beste Wahl Gemüsepfanne Asiatische Art,REWE Beste Wahl,500,g,,Asian vegetable mix
+27,Vegetables & Frozen Veg,REWE Beste Wahl Gemüsepfanne französische Art,REWE Beste Wahl,500,g,,French vegetable mix
+28,Vegetables & Frozen Veg,REWE Beste Wahl Wok Mix,REWE Beste Wahl,750,g,,Wok vegetables
+29,Frozen Meals,Frosta Bami Goreng,Frosta,500,g,,Asian noodle dish
+30,Frozen Meals,Frosta Bami Goreng vegan,Frosta,450,g,,Vegan Asian noodles
+31,Frozen Meals,Iglo Schlemmerfilet italiano,Iglo,380,g,,Italian-style fish
+32,Frozen Meals,McCain Country Potatoes Classic,McCain,600,g,,Frozen potato wedges
+33,Frozen Meals,REWE Bio Kartoffelpuffer,REWE Bio,360,g,,Potato pancakes (6x60g)
+34,Frozen Meals,REWE Beste Wahl Hähnchenpfanne Farfalle,REWE Beste Wahl,750,g,,Chicken pasta dish
+35,Frozen Meals,REWE Beste Wahl Hähnchen süß-sauer,REWE Beste Wahl,400,g,,Sweet & sour chicken
+36,Canned & Shelf-stable,REWE Beste Wahl Schwarze Bohnen in Chilisauce,REWE Beste Wahl,400,g,,Black beans in chili sauce
+37,Canned & Shelf-stable,REWE Beste Wahl Chili Sin Carne,REWE Beste Wahl,400,g,,Vegetarian chili
+38,Canned & Shelf-stable,REWE Beste Wahl Ananas Dessertstücke,REWE Beste Wahl,142,g,,Pineapple chunks
+39,Fruit & Snacks,REWE Beste Wahl Himbeer Heidelbeer Mix,REWE Beste Wahl,300,g,,Raspberry blueberry mix - used in 19+ plans
+40,Fruit & Snacks,Äpfel,Generic,1,piece,,Fresh apples
+41,Fruit & Snacks,Bananen,Generic,1,piece,,Fresh bananas
+42,Fruit & Snacks,Kiwi,Generic,1,piece,,Fresh kiwi
+43,Fruit & Snacks,REWE Bio Mandeln,REWE Bio,30,g,,Almonds (portion)
+44,Pantry,Olivenöl,Generic,15,ml,,Olive oil (1 tablespoon = ~15ml)
+45,Pantry,Butterschmalz,Generic,15,ml,,Clarified butter (1 tablespoon)
+46,Pantry,Balsamico Essig,Generic,15,ml,,Balsamic vinegar (1 tablespoon)

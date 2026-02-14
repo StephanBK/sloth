@@ -22,6 +22,7 @@ from app.routers.auth import router as auth_router
 from app.routers.users import router as users_router
 from app.routers.progress import router as progress_router
 from app.routers.subscriptions import router as subscriptions_router
+from app.routers.products import router as products_router
 
 settings = get_settings()
 
@@ -68,10 +69,7 @@ app.include_router(users_router)  # User profile endpoints: /users/*
 app.include_router(meal_plans_router)  # Meal plan endpoints: /meal-plans/*
 app.include_router(progress_router)  # Weight tracking endpoints: /weight/*
 app.include_router(subscriptions_router)  # Subscription endpoints: /subscriptions/*
-
-# Future routers (uncomment as we build them):
-# app.include_router(preferences_router)
-# app.include_router(grocery_router)
+app.include_router(products_router)  # Product catalog endpoints: /products/*
 
 
 @app.get("/", tags=["Health"])

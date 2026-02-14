@@ -19,6 +19,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.user import Gender
 import enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.product import Product
 
 
 class MealType(str, enum.Enum):
@@ -181,8 +185,16 @@ class Ingredient(Base):
     # Display order
     order_index: Mapped[int] = mapped_column(Integer, default=0)
 
-    # RELATIONSHIP
+    # Optional link to the products catalog
+    product_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("products.id"),
+        nullable=True,
+    )
+
+    # RELATIONSHIPS
     meal: Mapped["Meal"] = relationship("Meal", back_populates="ingredients")
+    product: Mapped["Product"] = relationship("Product", back_populates="ingredients")
 
     def __repr__(self) -> str:
         return f"<Ingredient {self.quantity}{self.unit} {self.product_name}>"

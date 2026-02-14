@@ -16,5 +16,6 @@ TUTORIAL: https://fastapi.tiangolo.com/tutorial/bigger-applications/
 
 from app.routers.meal_plans import router as meal_plans_router
 from app.routers.auth import router as auth_router
+from app.routers.products import router as products_router
 
-__all__ = ["meal_plans_router", "auth_router"]
+__all__ = ["meal_plans_router", "auth_router", "products_router"]
