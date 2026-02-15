@@ -16,32 +16,38 @@
    ============================================================================= */
 
 :root {
-  /* Primary colors - Forest Green */
-  --color-primary: #4F7942;
-  --color-primary-dark: #3d5e33;
-  --color-primary-light: #6b9959;
+  /* Primary colors - Warm Earthy Brown & Sage Green (from Faultierdiät PDF) */
+  --color-primary: #6B8F5E;
+  --color-primary-dark: #4A7A4A;
+  --color-primary-light: #8FB385;
 
-  /* Neutral colors */
-  --color-white: #ffffff;
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
+  /* Brand brown - chocolate accent from PDF headings */
+  --color-brown: #5C3A21;
+  --color-brown-dark: #3E2415;
+  --color-brown-light: #7A5438;
 
-  /* Semantic colors */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
+  /* Warm neutral colors - cream/off-white palette */
+  --color-white: #FFFDF9;
+  --color-gray-50: #FAF6F1;
+  --color-gray-100: #F3EDE4;
+  --color-gray-200: #E5DDD2;
+  --color-gray-300: #D1C7BA;
+  --color-gray-400: #A89B8C;
+  --color-gray-500: #7D7268;
+  --color-gray-600: #5E544A;
+  --color-gray-700: #453D35;
+  --color-gray-800: #332C25;
+  --color-gray-900: #231E19;
+
+  /* Semantic colors - warmer tones */
+  --color-success: #6B8F5E;
+  --color-warning: #D4933D;
+  --color-error: #C45B4A;
+  --color-info: #5E7F8F;
 
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family: 'Georgia', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -58,10 +64,10 @@
   --radius-xl: 1rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Shadows - warmer, subtler */
+  --shadow-sm: 0 1px 3px 0 rgb(92 58 33 / 0.06);
+  --shadow-md: 0 4px 8px -1px rgb(92 58 33 / 0.08), 0 2px 4px -2px rgb(92 58 33 / 0.04);
+  --shadow-lg: 0 10px 20px -3px rgb(92 58 33 / 0.1), 0 4px 8px -4px rgb(92 58 33 / 0.06);
 }
 
 /* =============================================================================
@@ -81,10 +87,14 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
+  font-family: var(--font-family-sans);
   color: var(--color-gray-900);
   background-color: var(--color-gray-50);
   line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family);
 }
 
 /* =============================================================================
@@ -113,7 +123,7 @@ body {
   width: 2rem;
   height: 2rem;
   border: 2px solid var(--color-gray-200);
-  border-top-color: var(--color-primary);
+  border-top-color: var(--color-brown);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -152,8 +162,8 @@ body {
 
 .form-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(79, 121, 66, 0.2);
+  border-color: var(--color-brown);
+  box-shadow: 0 0 0 3px rgba(92, 58, 33, 0.15);
 }
 
 .form-input::placeholder {
@@ -232,6 +242,7 @@ body {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-xl);
+  border: 1px solid var(--color-gray-200);
 }
 
 /* =============================================================================
@@ -245,7 +256,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: var(--spacing-xl);
-  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+  background: linear-gradient(160deg, #8FB385 0%, #6B8F5E 40%, #4A7A4A 100%);
 }
 
 .auth-card {
@@ -264,7 +275,7 @@ body {
 
 .auth-logo h1 {
   font-size: 2rem;
-  color: var(--color-primary);
+  color: var(--color-brown);
   margin-bottom: var(--spacing-xs);
 }
 
@@ -285,7 +296,7 @@ body {
 }
 
 .auth-footer a {
-  color: var(--color-primary);
+  color: var(--color-brown);
   text-decoration: none;
   font-weight: 500;
 }
@@ -297,8 +308,8 @@ body {
 .auth-error {
   margin-bottom: var(--spacing-md);
   padding: var(--spacing-sm) var(--spacing-md);
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+  background-color: #FDF0ED;
+  border: 1px solid #E8C4BA;
   border-radius: var(--radius-md);
   color: var(--color-error);
   font-size: 0.875rem;
@@ -401,7 +412,7 @@ body {
 }
 
 .intake-progress-dot.active {
-  background-color: var(--color-primary);
+  background-color: var(--color-brown);
 }
 
 .intake-progress-dot.completed {
@@ -490,7 +501,7 @@ body {
 }
 
 .weight-stat-card.highlight {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-brown-light), var(--color-brown));
   color: var(--color-white);
 }
 
@@ -524,7 +535,7 @@ body {
 
 .weight-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-success));
+  background: linear-gradient(90deg, var(--color-brown-light), var(--color-primary));
   border-radius: var(--radius-full);
   transition: width 0.3s ease;
 }
@@ -545,15 +556,15 @@ body {
 }
 
 .weight-alert.warning {
-  background: #fef3c7;
-  border: 1px solid #f59e0b;
-  color: #92400e;
+  background: #FDF3E4;
+  border: 1px solid var(--color-warning);
+  color: #7A5438;
 }
 
 .weight-alert.info {
-  background: #dbeafe;
-  border: 1px solid #3b82f6;
-  color: #1e40af;
+  background: #EDF3F5;
+  border: 1px solid var(--color-info);
+  color: #3D5A66;
 }
 
 .weight-alert strong {
@@ -607,8 +618,8 @@ body {
 }
 
 .weight-filter-btn.active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--color-brown);
+  border-color: var(--color-brown);
   color: white;
 }
 
@@ -789,7 +800,7 @@ body {
 
 .nav-item:hover,
 .nav-item.active {
-  color: var(--color-primary);
+  color: var(--color-brown);
 }
 
 .nav-item svg {
@@ -821,7 +832,7 @@ body {
 }
 
 .meals-level-badge {
-  background: var(--color-primary);
+  background: var(--color-brown);
   color: white;
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-full);
@@ -867,10 +878,11 @@ body {
 .meal-plan-day {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-brown);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family);
 }
 
 .meal-plan-name {
@@ -987,6 +999,7 @@ body {
 
 .meal-item {
   border: 1px solid var(--color-gray-200);
+  border-top: 2px solid var(--color-brown);
   border-radius: var(--radius-md);
   padding: var(--spacing-md);
 }
@@ -999,12 +1012,13 @@ body {
 }
 
 .meal-type-badge {
-  background: var(--color-primary-light);
-  color: white;
+  background: var(--color-brown);
+  color: var(--color-white);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
   font-weight: 500;
+  font-family: var(--font-family);
 }
 
 .meal-kcal {
@@ -1104,7 +1118,7 @@ body {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  background: linear-gradient(135deg, var(--color-brown-light), var(--color-brown));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1125,12 +1139,13 @@ body {
 
 .profile-level-badge {
   display: inline-block;
-  background: var(--color-primary);
+  background: var(--color-brown);
   color: white;
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 500;
+  font-family: var(--font-family);
 }
 
 /* Profile Stats */
@@ -1165,7 +1180,7 @@ body {
 
 /* Progress Card */
 .profile-progress-card {
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  background: linear-gradient(135deg, var(--color-brown-light), var(--color-brown));
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   color: white;
@@ -1280,7 +1295,7 @@ body {
 }
 
 .btn-danger:hover:not(:disabled) {
-  background-color: #dc2626;
+  background-color: #A84A3A;
 }
 
 /* =============================================================================
@@ -1716,7 +1731,7 @@ body {
 }
 
 .pricing-card.popular {
-  border-color: var(--color-primary);
+  border-color: var(--color-brown);
 }
 
 .pricing-badge {
@@ -1724,7 +1739,7 @@ body {
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-primary);
+  background: var(--color-brown);
   color: white;
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-full);
@@ -1756,7 +1771,7 @@ body {
 
 .pricing-savings {
   display: inline-block;
-  background: var(--color-success);
+  background: var(--color-primary);
   color: white;
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
@@ -1866,7 +1881,7 @@ body {
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  background: #ecfdf5;
+  background: #F0F5ED;
   border: 1px solid var(--color-success);
   border-radius: var(--radius-md);
   color: var(--color-success);
@@ -1900,7 +1915,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(135deg, var(--color-brown-light), var(--color-brown));
   color: white;
   border-radius: var(--radius-lg);
   padding: var(--spacing-sm) var(--spacing-md);
@@ -1951,7 +1966,7 @@ body {
 .dash-progress-percent {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-brown);
 }
 
 .dash-progress-bar-container {
@@ -1967,7 +1982,7 @@ body {
 
 .dash-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary-light), var(--color-success));
+  background: linear-gradient(90deg, var(--color-brown-light), var(--color-primary));
   border-radius: var(--radius-full);
   transition: width 0.5s ease;
 }
@@ -2037,7 +2052,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primary);
+  background: var(--color-brown);
   border-radius: var(--radius-lg);
   color: white;
   flex-shrink: 0;
@@ -2106,7 +2121,7 @@ body {
   padding: var(--spacing-xs) var(--spacing-md);
   font-size: 0.8rem;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--color-brown);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -2178,8 +2193,8 @@ body {
 }
 
 .dash-meal-item.active {
-  background: rgba(79, 121, 66, 0.06);
-  border-left: 3px solid var(--color-primary);
+  background: rgba(92, 58, 33, 0.05);
+  border-left: 3px solid var(--color-brown);
 }
 
 .dash-meal-emoji {
@@ -2247,7 +2262,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: var(--color-brown);
 }
 
 .dash-action-icon svg {
@@ -2300,7 +2315,7 @@ body {
 }
 
 .grocery-count {
-  background: var(--color-primary);
+  background: var(--color-brown);
   color: white;
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-full);
@@ -2345,14 +2360,14 @@ body {
 }
 
 .grocery-day-btn.active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--color-brown);
+  border-color: var(--color-brown);
   color: white;
 }
 
 .grocery-day-btn:hover:not(.active) {
-  border-color: var(--color-primary-light);
-  color: var(--color-primary);
+  border-color: var(--color-brown-light);
+  color: var(--color-brown);
 }
 
 .grocery-day-presets {
@@ -2469,8 +2484,8 @@ body {
 }
 
 .grocery-checkbox.checked {
-  background: var(--color-success);
-  border-color: var(--color-success);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .grocery-checkbox svg {
@@ -2541,7 +2556,7 @@ body {
 }
 
 .form-input.success:focus {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 3px rgba(107, 143, 94, 0.2);
 }
 
 .form-success {

@@ -14,8 +14,8 @@ class ProductResponse(BaseModel):
     brand: Optional[str] = None
     ean: Optional[str] = None
     category: str
-    package_size: float
-    unit: str
+    package_size: Optional[float] = None
+    unit: Optional[str] = None
     calories_per_100g: Optional[float] = None
     protein_per_100g: Optional[float] = None
     carbs_per_100g: Optional[float] = None
@@ -23,6 +23,15 @@ class ProductResponse(BaseModel):
     fiber_per_100g: Optional[float] = None
     sugar_per_100g: Optional[float] = None
     salt_per_100g: Optional[float] = None
+    data_source: str = "manual"
+    is_curated: bool = False
+    data_confidence: Optional[float] = None
+    nutriscore_grade: Optional[str] = None
+    image_url: Optional[str] = None
+    image_thumb_url: Optional[str] = None
+    off_id: Optional[str] = None
+    bls_code: Optional[str] = None
+    last_synced_at: Optional[datetime] = None
     notes: Optional[str] = None
 
     class Config:
@@ -35,8 +44,12 @@ class ProductListResponse(BaseModel):
     name: str
     brand: Optional[str] = None
     category: str
-    package_size: float
-    unit: str
+    package_size: Optional[float] = None
+    unit: Optional[str] = None
+    data_source: str = "manual"
+    is_curated: bool = False
+    nutriscore_grade: Optional[str] = None
+    image_thumb_url: Optional[str] = None
 
     class Config:
         from_attributes = True

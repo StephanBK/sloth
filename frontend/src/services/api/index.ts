@@ -20,6 +20,13 @@ export { userApi } from './user';
 export { weightApi } from './weight';
 export { mealPlanApi, type MealPlanListItem, type MealPlanFilters } from './mealPlan';
 export {
+  productsApi,
+  type Product,
+  type ProductListItem,
+  type ProductFilters,
+  type ProductStats,
+} from './products';
+export {
   subscriptionApi,
   type SubscriptionPlan,
   type SubscriptionStatus,

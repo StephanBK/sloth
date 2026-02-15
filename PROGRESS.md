@@ -4,9 +4,9 @@
 
 ---
 
-## Current Status: Phase 10 - STRIPE LIVE & FULLY WIRED! 🚀
+## Current Status: Phase 11 - UI REBRAND (Faultierdiät PDF Visual Language) 🎨
 
-**Last Updated:** February 8, 2026
+**Last Updated:** February 15, 2026
 
 ---
 
@@ -79,7 +79,7 @@
 - [x] Created Register page (German UI)
 - [x] Created Intake form (3 screens, German UI)
 - [x] Created Dashboard page (basic)
-- [x] Created global CSS with design tokens (forest green theme)
+- [x] Created global CSS with design tokens (warm earthy theme — rebranded from Faultierdiät PDFs)
 - [x] **Build passes successfully!**
 
 ### Weight Tracking UI (Session 4 - COMPLETE)
@@ -235,11 +235,13 @@
 - [x] Grocery list feature (day selector, ingredient aggregation, checklist)
 
 ### Remaining Polish (Nice to Have)
-- [ ] Dark mode support
+- [ ] Dark mode support (with warm brown dark palette)
 - [ ] Improve Google OAuth consent screen (add logo, verify app)
 - [ ] Push notifications for reminders
 - [ ] Email notifications for subscription events
 - [ ] Free trial period
+- [ ] Add custom sloth illustrations/icons to match PDF mascot
+- [ ] Consider adding a Google Font (e.g., "Caveat" or "Pacifico") for meal labels to match PDF script style
 
 ---
 
@@ -514,6 +516,41 @@ sloth/
   - Created webhook endpoint in Stripe Dashboard → `https://sloth-production.up.railway.app/subscriptions/webhook`
   - Listening to 5 events: checkout.session.completed, customer.subscription.updated, customer.subscription.deleted, invoice.payment_succeeded, invoice.payment_failed
   - Endpoint active and verified reachable
+
+### Session 11 - February 15, 2026
+- **Product Catalog & Data Pipeline (from previous uncommitted work):**
+  - Added 46 core products with full nutrition data to Product model
+  - Extended Product model with data provenance fields (data_source, data_confidence, is_curated)
+  - Added external IDs for cross-referencing (off_id, bls_code)
+  - Created product API endpoints: GET /products, GET /products/categories, GET /products/{id}
+  - Created data pipeline scripts for Open Food Facts + BLS (German food database) import
+  - New files: backend/scripts/pipeline/ (off_download, off_filter, off_import, off_verify, bls_import, utils)
+  - Processed data: data/processed/off_german_products.jsonl
+  - Frontend: Added Product TypeScript interface and product API client
+
+- **UI Rebrand — Faultierdiät PDF Visual Language 🎨**
+  - **Extracted design language** from Männer Pläne.pdf / Frauen_Pläne.pdf to create cohesive brand identity
+  - **Color palette overhaul** (entire App.css design tokens rewritten):
+    - Primary: Sage green `#6B8F5E` (warmed from cold `#4F7942`)
+    - Brand accent: Chocolate brown `#5C3A21` (extracted from PDF headings/borders)
+    - Neutrals: Warm cream/off-white palette (`#FAF6F1`, `#F3EDE4`, etc.) replacing cold grays
+    - Semantic colors: Warmer tones for success, warning, error, info
+    - Shadows: Brown-tinted instead of pure black
+  - **Typography**: Added serif font stack (Georgia/Palatino) for headings to echo the PDF's elegant script style; body stays sans-serif
+  - **Component updates** (30+ CSS rules changed):
+    - Cards: Added warm borders (`--color-gray-200`)
+    - Meal items: Brown top borders matching PDF's horizontal rule dividers
+    - Auth page: Sage green gradient matching PDF cover
+    - Badges (level, meal type, pricing): Chocolate brown
+    - All interactive highlights: Brown accent (nav active, filters, day buttons, spinners)
+    - Profile avatar & progress card: Brown gradient
+    - Dashboard: Level pill, progress bar, action icons all brown-accented
+    - Grocery: Day buttons, count badge, checkboxes updated
+    - Subscription: Pricing badge, popular card border updated
+    - Alerts: Warm cream-tinted backgrounds
+    - Intake: Progress dots use brown
+    - Loading spinner: Brown accent
+  - **Design philosophy**: Warm, earthy, organic feel matching the Faultierdiät brand identity from the PDFs — replacing the generic cold tech-green look
 
 ---
 

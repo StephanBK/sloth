@@ -1,8 +1,8 @@
 """
-Product Models - Product, ProductAvailability, ProductAlternative
+Product Models - Product, ProductAvailability, ProductAlternative, ProductSourceLink
 
-These tables store the ~46 core products used across all meal plans,
-which stores carry them, and substitution options.
+Product catalog with multi-source data pipeline support.
+Sources: manual (curated), off (Open Food Facts), bls (Bundeslebensmittelschlüssel).
 """
 
 import uuid
@@ -17,10 +17,10 @@ from app.database import Base
 
 class Product(Base):
     """
-    A product from the meal plans (e.g. "REWE Beste Wahl High Protein Quarkcreme").
+    A grocery product with nutritional data.
 
-    46 core products extracted from the diet plans, with nutritional info
-    and barcodes for shopping list generation.
+    Products come from multiple sources: manually curated (46 core products),
+    Open Food Facts bulk import, and BLS scientific database.
     """
     __tablename__ = "products"
 
@@ -38,9 +38,9 @@ class Product(Base):
     # Categorization
     category: Mapped[str] = mapped_column(String(100), nullable=False)
 
-    # Package info
-    package_size: Mapped[float] = mapped_column(Float, nullable=False)
-    unit: Mapped[str] = mapped_column(String(50), nullable=False)  # g, ml, piece
+    # Package info (nullable for bulk imports that lack packaging data)
+    package_size: Mapped[float] = mapped_column(Float, nullable=True)
+    unit: Mapped[str] = mapped_column(String(50), nullable=True)  # g, ml, piece
 
     # Nutritional data per 100g/100ml
     calories_per_100g: Mapped[float] = mapped_column(Float, nullable=True)
@@ -50,6 +50,22 @@ class Product(Base):
     fiber_per_100g: Mapped[float] = mapped_column(Float, nullable=True)
     sugar_per_100g: Mapped[float] = mapped_column(Float, nullable=True)
     salt_per_100g: Mapped[float] = mapped_column(Float, nullable=True)
+
+    # Data provenance
+    data_source: Mapped[str] = mapped_column(
+        String(50), nullable=False, default="manual"
+    )  # "manual", "off", "bls"
+    data_confidence: Mapped[float] = mapped_column(Float, nullable=True)  # 0.0-1.0
+    is_curated: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+
+    # External identifiers
+    off_id: Mapped[str] = mapped_column(String(50), nullable=True)
+    bls_code: Mapped[str] = mapped_column(String(20), nullable=True)
+
+    # Quality/display fields
+    nutriscore_grade: Mapped[str] = mapped_column(String(1), nullable=True)  # a-e
+    image_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    image_thumb_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Notes
     notes: Mapped[str] = mapped_column(Text, nullable=True)
@@ -61,6 +77,7 @@ class Product(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
+    last_synced_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     # Relationships
     availability: Mapped[list["ProductAvailability"]] = relationship(
@@ -80,9 +97,21 @@ class Product(Base):
         "Ingredient",
         back_populates="product",
     )
+    # Source links for cross-referencing across data sources
+    source_links: Mapped[list["ProductSourceLink"]] = relationship(
+        "ProductSourceLink",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )
+
+    __table_args__ = (
+        Index("idx_products_data_source", "data_source"),
+        Index("idx_products_off_id", "off_id"),
+        Index("idx_products_bls_code", "bls_code"),
+    )
 
     def __repr__(self) -> str:
-        return f"<Product {self.name} ({self.brand})>"
+        return f"<Product {self.name} ({self.brand}) src={self.data_source}>"
 
 
 class ProductAvailability(Base):
@@ -170,3 +199,34 @@ class ProductAlternative(Base):
 
     def __repr__(self) -> str:
         return f"<ProductAlternative priority={self.priority}>"
+
+
+class ProductSourceLink(Base):
+    """Cross-reference when a product is matched across multiple data sources."""
+    __tablename__ = "product_source_links"
+
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+    )
+
+    product_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("products.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    source: Mapped[str] = mapped_column(String(50), nullable=False)  # "off", "bls"
+    external_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    external_data: Mapped[str] = mapped_column(Text, nullable=True)  # raw JSON snapshot
+    matched_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    match_method: Mapped[str] = mapped_column(String(50), nullable=True)  # "ean_exact", "fuzzy_name"
+    match_confidence: Mapped[float] = mapped_column(Float, nullable=True)
+
+    # Relationships
+    product: Mapped["Product"] = relationship("Product", back_populates="source_links")
+
+    def __repr__(self) -> str:
+        return f"<ProductSourceLink {self.source}:{self.external_id}>"

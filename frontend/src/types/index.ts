@@ -209,6 +209,37 @@ export interface MealPlan {
 }
 
 // =============================================================================
+// Product Types
+// =============================================================================
+
+export interface Product {
+  id: string;
+  name: string;
+  brand: string | null;
+  ean: string | null;
+  category: string;
+  package_size: number | null;
+  unit: string | null;
+  calories_per_100g: number | null;
+  protein_per_100g: number | null;
+  carbs_per_100g: number | null;
+  fat_per_100g: number | null;
+  fiber_per_100g: number | null;
+  sugar_per_100g: number | null;
+  salt_per_100g: number | null;
+  data_source: string;
+  is_curated: boolean;
+  data_confidence: number | null;
+  nutriscore_grade: string | null;
+  image_url: string | null;
+  image_thumb_url: string | null;
+  off_id: string | null;
+  bls_code: string | null;
+  last_synced_at: string | null;
+  notes: string | null;
+}
+
+// =============================================================================
 // API Response Types
 // =============================================================================
 
