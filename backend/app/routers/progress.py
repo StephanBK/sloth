@@ -437,11 +437,11 @@ def detect_stall(db: Session, user: User) -> StallStatus:
     is_stalled = abs(weight_change) <= 0.5
 
     if is_stalled:
-        message = "Your weight has stalled. Consider dropping to the next level for continued progress."
+        message = "Dein Gewicht stagniert. Erwäge, auf das nächstniedrigere Kalorienlevel zu wechseln."
     elif weight_change < 0:
-        message = f"Great progress! You've lost {abs(weight_change):.1f}kg in the last 2 weeks."
+        message = f"Super Fortschritt! Du hast {abs(weight_change):.1f} kg in den letzten 2 Wochen verloren."
     else:
-        message = f"You've gained {weight_change:.1f}kg. That's okay - stay consistent with your current level."
+        message = f"Du hast {weight_change:.1f} kg zugenommen. Kein Problem — bleib bei deinem aktuellen Kalorienlevel."
 
     return StallStatus(
         can_detect=True,

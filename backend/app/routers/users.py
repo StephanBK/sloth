@@ -88,21 +88,18 @@ async def complete_intake(
     current_user.height_cm = intake_data.height_cm
     current_user.age = intake_data.age
     current_user.current_weight_kg = intake_data.current_weight_kg
-    current_user.goal_weight_kg = intake_data.goal_weight_kg
     current_user.starting_weight_kg = intake_data.current_weight_kg  # Capture starting weight
-    current_user.activity_level = intake_data.activity_level
 
     # Convert list to comma-separated string for storage
     if intake_data.dietary_restrictions:
         current_user.dietary_restrictions = ','.join(intake_data.dietary_restrictions)
 
-    # Calculate starting level based on profile
-    # TODO: Implement proper level calculation logic
+    # Calculate starting level based on calorie awareness
     current_user.current_level = calculate_starting_level(
         gender=intake_data.gender,
-        activity_level=intake_data.activity_level,
         current_weight_kg=intake_data.current_weight_kg,
-        goal_weight_kg=intake_data.goal_weight_kg,
+        calorie_awareness=intake_data.calorie_awareness,
+        known_calorie_intake=intake_data.known_calorie_intake,
     )
 
     # Mark intake as complete
@@ -153,7 +150,6 @@ async def save_intake_screen2(
 ):
     """Save just screen 2 of intake."""
     current_user.current_weight_kg = screen_data.current_weight_kg
-    current_user.goal_weight_kg = screen_data.goal_weight_kg
     current_user.starting_weight_kg = screen_data.current_weight_kg
 
     db.commit()
@@ -187,17 +183,15 @@ async def save_intake_screen3(
             detail="Please complete screens 1 and 2 first"
         )
 
-    current_user.activity_level = screen_data.activity_level
-
     if screen_data.dietary_restrictions:
         current_user.dietary_restrictions = ','.join(screen_data.dietary_restrictions)
 
-    # Calculate starting level
+    # Calculate starting level based on calorie awareness
     current_user.current_level = calculate_starting_level(
         gender=current_user.gender,
-        activity_level=screen_data.activity_level,
         current_weight_kg=current_user.current_weight_kg,
-        goal_weight_kg=current_user.goal_weight_kg,
+        calorie_awareness=screen_data.calorie_awareness,
+        known_calorie_intake=screen_data.known_calorie_intake,
     )
 
     current_user.intake_completed = True
@@ -247,50 +241,73 @@ async def update_profile(
 
 def calculate_starting_level(
     gender: str,
-    activity_level: str,
     current_weight_kg: float,
-    goal_weight_kg: float,
+    calorie_awareness: str,
+    known_calorie_intake: int = None,
 ) -> int:
     """
-    Calculate the starting diet level based on user profile.
+    Calculate the starting diet level based on calorie awareness.
 
-    LEARNING NOTE:
-    This is placeholder logic. The real formula should come from
-    your brother's Faultierrechner system.
+    Calorie levels per gender:
+      Men:   Level 1=2700, Level 2=2400, Level 3=2100, Level 4=1800, Level 5=1500
+      Women: Level 1=2400, Level 2=2100, Level 3=1800, Level 4=1500, Level 5=1200
 
-    Current logic:
-    - Uses Mifflin-St Jeor formula for BMR
-    - Multiplies by activity factor for TDEE
-    - Maps to level 1-5 based on deficit needed
+    Logic:
+    1. If user knows their calorie intake:
+       - Find the next level DOWN from their reported intake
+       - "gaining" → the level at or just below their intake (they need less)
+       - "maintaining" → one level below their intake (create a deficit)
+       - "losing" → the level closest to their intake (they're already in deficit)
 
-    TODO: Replace with actual Faultierdiät calculation
+    2. If user doesn't know ("unknown"):
+       - Estimate: body weight (kg) × 30 = approximate maintenance calories
+       - Pick the next calorie level down from that estimate
+
+    The starting point doesn't need to be perfect — the system
+    auto-corrects weekly via stall detection.
     """
-    # Activity multipliers (TDEE = BMR * multiplier)
-    activity_multipliers = {
-        "sedentary": 1.2,
-        "light": 1.375,
-        "moderate": 1.55,
-        "active": 1.725,
-    }
-
-    multiplier = activity_multipliers.get(activity_level, 1.375)
-
-    # For now, simple logic:
-    # - If need to lose a lot (>15kg): Start at Level 1 (highest calories, gradual)
-    # - If need to lose moderate (8-15kg): Start at Level 2
-    # - If need to lose some (3-8kg): Start at Level 3
-    # - If need to lose little (<3kg): Start at Level 4
-
-    weight_to_lose = current_weight_kg - goal_weight_kg
-
-    if weight_to_lose > 15:
-        return 1
-    elif weight_to_lose > 8:
-        return 2
-    elif weight_to_lose > 3:
-        return 3
+    # Define calorie levels by gender
+    if gender == "female":
+        calorie_levels = {1: 2400, 2: 2100, 3: 1800, 4: 1500, 5: 1200}
     else:
-        return 4
+        calorie_levels = {1: 2700, 2: 2400, 3: 2100, 4: 1800, 5: 1500}
 
-    # Note: Level 5 is never a starting level - it's only reached
-    # after dropping from higher levels due to stalls.
+    if calorie_awareness == "unknown" or known_calorie_intake is None:
+        # Estimate: body weight × 30
+        estimated_maintenance = current_weight_kg * 30
+        target_calories = estimated_maintenance
+    else:
+        target_calories = known_calorie_intake
+
+    # For gaining/unknown: pick the level at or just below the target
+    # For maintaining: pick one step below (create deficit)
+    # For losing: pick the level closest to what they're already eating
+    def find_level_at_or_below(target: float) -> int:
+        """Find the highest level (lowest number) whose calories are <= target."""
+        for level in sorted(calorie_levels.keys()):
+            if calorie_levels[level] <= target:
+                return level
+        # If target is below all levels, return level 5 (lowest calories)
+        return 5
+
+    def find_closest_level(target: float) -> int:
+        """Find the level whose calories are closest to target."""
+        closest_level = 1
+        closest_diff = abs(calorie_levels[1] - target)
+        for level, kcal in calorie_levels.items():
+            diff = abs(kcal - target)
+            if diff < closest_diff:
+                closest_diff = diff
+                closest_level = level
+        return closest_level
+
+    if calorie_awareness == "losing":
+        # Already in deficit — match their current intake
+        return find_closest_level(target_calories)
+    elif calorie_awareness == "maintaining":
+        # At maintenance — go one step below
+        level = find_level_at_or_below(target_calories)
+        return min(level + 1, 5)  # One step more aggressive, cap at 5
+    else:
+        # gaining or unknown — pick the level at or just below
+        return find_level_at_or_below(target_calories)

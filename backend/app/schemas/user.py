@@ -25,11 +25,19 @@ class Gender(str, Enum):
 
 
 class ActivityLevel(str, Enum):
-    """Activity level options"""
+    """Activity level options (kept for backward compatibility)"""
     SEDENTARY = "sedentary"
     LIGHT = "light"
     MODERATE = "moderate"
     ACTIVE = "active"
+
+
+class CalorieAwareness(str, Enum):
+    """How the user's current calorie intake relates to their weight"""
+    GAINING = "gaining"
+    MAINTAINING = "maintaining"
+    LOSING = "losing"
+    UNKNOWN = "unknown"
 
 
 # =============================================================================
@@ -52,31 +60,26 @@ class IntakeScreen1(BaseModel):
 
 class IntakeScreen2(BaseModel):
     """
-    Screen 2 of intake: Weight info
+    Screen 2 of intake: Weight info (just current weight)
     """
     current_weight_kg: float = Field(..., ge=30, le=300, description="Current weight in kg")
-    goal_weight_kg: float = Field(..., ge=30, le=300, description="Goal weight in kg")
-
-    @field_validator('goal_weight_kg')
-    @classmethod
-    def goal_must_be_reasonable(cls, v, info):
-        """Goal weight shouldn't be too extreme"""
-        # We can't easily compare to current_weight here since validators run per-field
-        # But we can check absolute bounds
-        if v < 30:
-            raise ValueError('Goal weight must be at least 30 kg')
-        return v
 
 
 class IntakeScreen3(BaseModel):
     """
-    Screen 3 of intake: Activity & Diet
+    Screen 3 of intake: Calorie awareness & Diet
 
-    LEARNING NOTE:
-    dietary_restrictions is a list that gets stored as comma-separated string.
-    Common values: vegetarian, vegan, gluten-free, lactose-free, nut-allergy
+    The user either knows their approximate daily calorie intake
+    (and whether they're gaining/maintaining/losing at that level),
+    or they don't know — in which case we estimate from body weight.
     """
-    activity_level: ActivityLevel
+    calorie_awareness: CalorieAwareness = Field(
+        ..., description="How the user's current calories relate to their weight"
+    )
+    known_calorie_intake: Optional[int] = Field(
+        default=None, ge=800, le=5000,
+        description="Approximate daily calorie intake if known"
+    )
     dietary_restrictions: Optional[List[str]] = Field(
         default=None,
         description="List of dietary restrictions (e.g., ['vegetarian', 'gluten-free'])"
@@ -96,10 +99,10 @@ class IntakeComplete(BaseModel):
 
     # Screen 2
     current_weight_kg: float = Field(..., ge=30, le=300)
-    goal_weight_kg: float = Field(..., ge=30, le=300)
 
     # Screen 3
-    activity_level: ActivityLevel
+    calorie_awareness: CalorieAwareness
+    known_calorie_intake: Optional[int] = Field(default=None, ge=800, le=5000)
     dietary_restrictions: Optional[List[str]] = None
 
     model_config = {
@@ -110,8 +113,8 @@ class IntakeComplete(BaseModel):
                     "height_cm": 180,
                     "age": 30,
                     "current_weight_kg": 85.5,
-                    "goal_weight_kg": 75.0,
-                    "activity_level": "moderate",
+                    "calorie_awareness": "maintaining",
+                    "known_calorie_intake": 2400,
                     "dietary_restrictions": ["gluten-free"]
                 }
             ]
@@ -135,8 +138,6 @@ class ProfileUpdate(BaseModel):
     height_cm: Optional[int] = Field(None, ge=100, le=250)
     age: Optional[int] = Field(None, ge=16, le=100)
     current_weight_kg: Optional[float] = Field(None, ge=30, le=300)
-    goal_weight_kg: Optional[float] = Field(None, ge=30, le=300)
-    activity_level: Optional[ActivityLevel] = None
     dietary_restrictions: Optional[List[str]] = None
     current_level: Optional[int] = Field(None, ge=1, le=5)
 

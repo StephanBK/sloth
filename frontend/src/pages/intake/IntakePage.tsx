@@ -16,7 +16,7 @@
 import { useState } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 import { userApi } from '@/services/api';
-import type { Gender, ActivityLevel, IntakeScreen1, IntakeScreen2, IntakeScreen3 } from '@/types';
+import type { Gender, IntakeScreen1, IntakeScreen2, IntakeScreen3, CalorieAwareness } from '@/types';
 
 // Total number of screens
 const TOTAL_SCREENS = 3;
@@ -36,11 +36,11 @@ export default function IntakePage() {
 
   const [screen2Data, setScreen2Data] = useState<IntakeScreen2>({
     current_weight_kg: 80,
-    goal_weight_kg: 70,
   });
 
   const [screen3Data, setScreen3Data] = useState<IntakeScreen3>({
-    activity_level: 'moderate',
+    calorie_awareness: 'unknown',
+    known_calorie_intake: undefined,
     dietary_restrictions: [],
   });
 
@@ -244,7 +244,7 @@ interface Screen2Props {
 function Screen2({ data, onChange }: Screen2Props) {
   return (
     <div>
-      <h2 className="mb-lg">Deine Gewichtsziele</h2>
+      <h2 className="mb-lg">Dein Gewicht</h2>
 
       {/* Current weight */}
       <div className="form-group">
@@ -262,31 +262,6 @@ function Screen2({ data, onChange }: Screen2Props) {
           onChange={(e) => onChange({ ...data, current_weight_kg: parseFloat(e.target.value) || 0 })}
         />
       </div>
-
-      {/* Goal weight */}
-      <div className="form-group">
-        <label className="form-label" htmlFor="goalWeight">
-          Zielgewicht (kg)
-        </label>
-        <input
-          id="goalWeight"
-          type="number"
-          step="0.1"
-          className="form-input"
-          min={30}
-          max={300}
-          value={data.goal_weight_kg}
-          onChange={(e) => onChange({ ...data, goal_weight_kg: parseFloat(e.target.value) || 0 })}
-        />
-      </div>
-
-      {/* Weight to lose display */}
-      {data.current_weight_kg > data.goal_weight_kg && (
-        <p className="text-muted" style={{ marginTop: '1rem' }}>
-          Du möchtest {(data.current_weight_kg - data.goal_weight_kg).toFixed(1)} kg abnehmen.
-          Mit der Faultierdiät schaffst du das!
-        </p>
-      )}
     </div>
   );
 }
@@ -297,11 +272,10 @@ interface Screen3Props {
 }
 
 function Screen3({ data, onChange }: Screen3Props) {
-  const activityOptions: { value: ActivityLevel; label: string; description: string }[] = [
-    { value: 'sedentary', label: 'Sitzend', description: 'Wenig oder keine Bewegung' },
-    { value: 'light', label: 'Leicht aktiv', description: 'Leichte Bewegung 1-3 Tage/Woche' },
-    { value: 'moderate', label: 'Moderat aktiv', description: 'Moderate Bewegung 3-5 Tage/Woche' },
-    { value: 'active', label: 'Sehr aktiv', description: 'Intensive Bewegung 6-7 Tage/Woche' },
+  const calorieOptions: { value: CalorieAwareness; label: string; icon: string }[] = [
+    { value: 'gaining', label: 'Ich nehme zu', icon: '↑' },
+    { value: 'maintaining', label: 'Ich halte mein Gewicht', icon: '→' },
+    { value: 'losing', label: 'Ich nehme ab', icon: '↓' },
   ];
 
   const dietaryOptions = [
@@ -320,45 +294,116 @@ function Screen3({ data, onChange }: Screen3Props) {
     onChange({ ...data, dietary_restrictions: updated });
   };
 
+  const knowsCalories = data.calorie_awareness !== 'unknown';
+
   return (
     <div>
-      <h2 className="mb-lg">Aktivität & Ernährung</h2>
+      <h2 className="mb-lg">Deine Ernährung</h2>
 
-      {/* Activity level */}
+      {/* Calorie awareness */}
       <div className="form-group">
-        <label className="form-label">Aktivitätslevel</label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {activityOptions.map((option) => (
-            <label
-              key={option.value}
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '0.75rem',
-                padding: '0.75rem',
-                border: '1px solid',
-                borderColor: data.activity_level === option.value ? 'var(--color-primary)' : 'var(--color-gray-200)',
-                borderRadius: 'var(--radius-md)',
-                cursor: 'pointer',
-                backgroundColor: data.activity_level === option.value ? 'rgba(79, 121, 66, 0.05)' : 'transparent',
-              }}
-            >
+        <label className="form-label">Weißt du ungefähr, wie viele Kalorien du täglich zu dir nimmst?</label>
+
+        {/* Option: I know my calories */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+          <label className="form-label" style={{ fontSize: '0.9rem', fontWeight: 400, color: 'var(--color-gray-600)' }}>
+            Bei dieser Kalorienaufnahme...
+          </label>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {calorieOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => onChange({ ...data, calorie_awareness: option.value })}
+                style={{
+                  flex: '1 1 0',
+                  minWidth: '100px',
+                  padding: '1rem 0.75rem',
+                  border: '2px solid',
+                  borderColor: data.calorie_awareness === option.value ? 'var(--color-brand)' : 'var(--color-gray-200)',
+                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: data.calorie_awareness === option.value ? 'rgba(92, 58, 33, 0.06)' : 'transparent',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <span style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  color: data.calorie_awareness === option.value ? 'var(--color-brand)' : 'var(--color-gray-400)',
+                }}>{option.icon}</span>
+                <span style={{
+                  fontSize: '0.8rem',
+                  fontWeight: data.calorie_awareness === option.value ? 600 : 400,
+                  color: data.calorie_awareness === option.value ? 'var(--color-brand)' : 'var(--color-gray-600)',
+                  textAlign: 'center',
+                }}>{option.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Calorie input — only shown when a calorie option is selected */}
+          {knowsCalories && (
+            <div className="form-group" style={{ marginTop: '0.5rem' }}>
+              <label className="form-label" htmlFor="calorieIntake">
+                Ungefähre tägliche Kalorienaufnahme (kcal)
+              </label>
               <input
-                type="radio"
-                name="activity"
-                value={option.value}
-                checked={data.activity_level === option.value}
-                onChange={() => onChange({ ...data, activity_level: option.value })}
-                style={{ marginTop: '0.25rem' }}
+                id="calorieIntake"
+                type="number"
+                className="form-input"
+                placeholder="z.B. 2200"
+                min={800}
+                max={5000}
+                step={50}
+                value={data.known_calorie_intake ?? ''}
+                onChange={(e) => onChange({ ...data, known_calorie_intake: parseInt(e.target.value) || undefined })}
               />
-              <div>
-                <div style={{ fontWeight: 500 }}>{option.label}</div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--color-gray-500)' }}>
-                  {option.description}
-                </div>
-              </div>
-            </label>
-          ))}
+            </div>
+          )}
+
+          {/* Divider */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            margin: '0.5rem 0',
+          }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-gray-200)' }} />
+            <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>oder</span>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-gray-200)' }} />
+          </div>
+
+          {/* Option: I don't know */}
+          <button
+            type="button"
+            onClick={() => onChange({ ...data, calorie_awareness: 'unknown', known_calorie_intake: undefined })}
+            style={{
+              padding: '1rem',
+              border: '2px solid',
+              borderColor: data.calorie_awareness === 'unknown' ? 'var(--color-brand)' : 'var(--color-gray-200)',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: data.calorie_awareness === 'unknown' ? 'rgba(92, 58, 33, 0.06)' : 'transparent',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: data.calorie_awareness === 'unknown' ? 600 : 400,
+              color: data.calorie_awareness === 'unknown' ? 'var(--color-brand)' : 'var(--color-gray-600)',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            Ich weiß nichts über meine Kalorienaufnahme
+          </button>
+
+          {data.calorie_awareness === 'unknown' && (
+            <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-500)', marginTop: '0.25rem' }}>
+              Kein Problem! Wir berechnen einen guten Startwert basierend auf deinem Gewicht.
+              Das System korrigiert sich automatisch wöchentlich.
+            </p>
+          )}
         </div>
       </div>
 

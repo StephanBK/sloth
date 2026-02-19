@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
 import { mealPlanApi, weightApi } from '@/services/api';
 import type { MealPlan, Gender, WeightHistory } from '@/types';
+import { getLevelLabel } from '@/types';
 
 interface MealPlanListItem {
   id: string;
@@ -126,8 +127,7 @@ export default function DashboardPage() {
           <h1 className="dash-name">{firstName}</h1>
         </div>
         <div className="dash-level-pill">
-          <span className="dash-level-number">{userLevel}</span>
-          <span className="dash-level-label">Stufe</span>
+          <span className="dash-level-label">{getLevelLabel(userLevel, userGender)}</span>
         </div>
       </div>
 

@@ -10,7 +10,8 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
 import { userApi } from '@/services/api';
-import type { ProfileUpdate, ActivityLevel } from '@/types';
+import type { ProfileUpdate } from '@/types';
+import { getLevelLabel } from '@/types';
 
 export default function ProfilePage() {
   const { user, logout } = useAuthStore();
@@ -22,8 +23,6 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState<ProfileUpdate>({
     height_cm: user?.height_cm ?? undefined,
     age: user?.age ?? undefined,
-    goal_weight_kg: user?.goal_weight_kg ?? undefined,
-    activity_level: user?.activity_level ?? undefined,
   });
 
   // Update mutation
@@ -42,13 +41,6 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     await logout();
-  };
-
-  const activityLabels: Record<ActivityLevel, string> = {
-    sedentary: 'Kaum aktiv (Schreibtischjob)',
-    light: 'Leicht aktiv (1-2x Sport/Woche)',
-    moderate: 'Moderat aktiv (3-5x Sport/Woche)',
-    active: 'Sehr aktiv (6-7x Sport/Woche)',
   };
 
   if (!user) {
@@ -81,7 +73,7 @@ export default function ProfilePage() {
         </div>
         <div className="profile-email">{user.email}</div>
         <div className="profile-level-badge">
-          Stufe {user.current_level}
+          {getLevelLabel(user.current_level, user.gender)}
         </div>
       </div>
 
@@ -99,12 +91,14 @@ export default function ProfilePage() {
           </span>
           <span className="profile-stat-label">Aktuell (kg)</span>
         </div>
-        <div className="profile-stat">
-          <span className="profile-stat-value">
-            {user.goal_weight_kg?.toFixed(1) ?? '—'}
-          </span>
-          <span className="profile-stat-label">Ziel (kg)</span>
-        </div>
+        {user.goal_weight_kg && (
+          <div className="profile-stat">
+            <span className="profile-stat-value">
+              {user.goal_weight_kg.toFixed(1)}
+            </span>
+            <span className="profile-stat-label">Ziel (kg)</span>
+          </div>
+        )}
       </div>
 
       {/* Progress Summary */}
@@ -166,36 +160,6 @@ export default function ProfilePage() {
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="goal">Zielgewicht (kg)</label>
-              <input
-                id="goal"
-                type="number"
-                className="form-input"
-                value={formData.goal_weight_kg ?? ''}
-                onChange={(e) => setFormData({ ...formData, goal_weight_kg: parseFloat(e.target.value) || undefined })}
-                step="0.1"
-                min="40"
-                max="200"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label" htmlFor="activity">Aktivitätslevel</label>
-              <select
-                id="activity"
-                className="form-input"
-                value={formData.activity_level ?? ''}
-                onChange={(e) => setFormData({ ...formData, activity_level: e.target.value as ActivityLevel })}
-              >
-                <option value="">Bitte wählen</option>
-                <option value="sedentary">Kaum aktiv</option>
-                <option value="light">Leicht aktiv</option>
-                <option value="moderate">Moderat aktiv</option>
-                <option value="active">Sehr aktiv</option>
-              </select>
-            </div>
-
             {updateMutation.error && (
               <div className="auth-error">
                 Fehler beim Speichern. Bitte versuche es erneut.
@@ -239,12 +203,6 @@ export default function ProfilePage() {
                 {user.age ? `${user.age} Jahre` : '—'}
               </span>
             </div>
-            <div className="profile-info-item">
-              <span className="profile-info-label">Aktivitätslevel</span>
-              <span className="profile-info-value">
-                {user.activity_level ? activityLabels[user.activity_level] : '—'}
-              </span>
-            </div>
             {user.bmi && (
               <div className="profile-info-item">
                 <span className="profile-info-label">BMI</span>
@@ -260,8 +218,8 @@ export default function ProfilePage() {
         <h2>Diät-Einstellungen</h2>
         <div className="profile-info-list">
           <div className="profile-info-item">
-            <span className="profile-info-label">Aktuelle Stufe</span>
-            <span className="profile-info-value">Stufe {user.current_level}</span>
+            <span className="profile-info-label">Kalorienlevel</span>
+            <span className="profile-info-value">{getLevelLabel(user.current_level, user.gender)}</span>
           </div>
           {user.dietary_restrictions && user.dietary_restrictions.length > 0 && (
             <div className="profile-info-item">

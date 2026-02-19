@@ -17,6 +17,23 @@ export type Gender = 'male' | 'female';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active';
 
 // =============================================================================
+// Calorie Level Helpers
+// =============================================================================
+
+/** Maps level (1-5) + gender to kcal target */
+export const CALORIE_LEVELS: Record<Gender, Record<number, number>> = {
+  male:   { 1: 2700, 2: 2400, 3: 2100, 4: 1800, 5: 1500 },
+  female: { 1: 2400, 2: 2100, 3: 1800, 4: 1500, 5: 1200 },
+};
+
+/** Get the kcal label for a level, e.g. "2100 kcal" */
+export function getLevelLabel(level: number, gender: Gender | null): string {
+  const g = gender ?? 'male';
+  const kcal = CALORIE_LEVELS[g]?.[level];
+  return kcal ? `${kcal} kcal` : `${level}`;
+}
+
+// =============================================================================
 // Auth Types
 // =============================================================================
 
@@ -79,6 +96,9 @@ export interface UserProfile {
   updated_at: string;
 }
 
+// Calorie awareness options for intake
+export type CalorieAwareness = 'gaining' | 'maintaining' | 'losing' | 'unknown';
+
 // Intake form screens
 export interface IntakeScreen1 {
   gender: Gender;
@@ -88,11 +108,11 @@ export interface IntakeScreen1 {
 
 export interface IntakeScreen2 {
   current_weight_kg: number;
-  goal_weight_kg: number;
 }
 
 export interface IntakeScreen3 {
-  activity_level: ActivityLevel;
+  calorie_awareness: CalorieAwareness;
+  known_calorie_intake?: number;
   dietary_restrictions?: string[];
 }
 
@@ -103,8 +123,6 @@ export interface ProfileUpdate {
   height_cm?: number;
   age?: number;
   current_weight_kg?: number;
-  goal_weight_kg?: number;
-  activity_level?: ActivityLevel;
   dietary_restrictions?: string[];
   current_level?: number;
 }

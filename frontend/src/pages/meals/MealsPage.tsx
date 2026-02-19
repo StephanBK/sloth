@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { mealPlanApi } from '@/services/api';
 import { useAuthStore } from '@/stores/authStore';
 import type { MealPlan, Gender } from '@/types';
+import { getLevelLabel } from '@/types';
 
 interface MealPlanListItem {
   id: string;
@@ -77,14 +78,14 @@ export default function MealsPage() {
       <div className="meals-header">
         <h1>Deine Mahlzeiten</h1>
         <div className="meals-level-badge">
-          Stufe {userLevel}
+          {getLevelLabel(userLevel, userGender)}
         </div>
       </div>
 
       {/* Level info */}
       <div className="meals-info-card">
         <p>
-          Du bist auf <strong>Stufe {userLevel}</strong> der Faultier-Diät.
+          Dein aktuelles Kalorienlevel: <strong>{getLevelLabel(userLevel, userGender)}</strong>.
           Hier findest du deine täglichen Mahlzeitenpläne.
         </p>
       </div>
@@ -127,7 +128,7 @@ export default function MealsPage() {
             </svg>
           </div>
           <h2>Keine Mahlzeitenpläne verfügbar</h2>
-          <p>Für deine aktuelle Stufe sind noch keine Pläne hinterlegt.</p>
+          <p>Für dein aktuelles Kalorienlevel sind noch keine Pläne hinterlegt.</p>
         </div>
       )}
 

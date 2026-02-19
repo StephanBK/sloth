@@ -4,9 +4,9 @@
 
 ---
 
-## Current Status: Phase 11 - UI REBRAND (Faultierdiät PDF Visual Language) 🎨
+## Current Status: Phase 12 - Intake & Level System Simplification
 
-**Last Updated:** February 15, 2026
+**Last Updated:** February 18, 2026
 
 ---
 
@@ -193,10 +193,12 @@
 ### Intake Form
 - **3 screens:**
   1. Gender, Height (cm), Age
-  2. Current Weight (kg), Goal Weight (kg)
-  3. Activity Level, Dietary Restrictions
+  2. Current Weight (kg)
+  3. Calorie Awareness (gaining/maintaining/losing/unknown + optional kcal input), Dietary Restrictions
 - Supports both all-at-once submission and screen-by-screen with partial saves
 - starting_weight_kg captured on intake (never changes)
+- **Level naming:** Displayed as kcal targets (e.g., "2100 kcal") not "Stufe 1-5"
+- **Starting level:** Calculated from calorie awareness, not weight-to-lose. If unknown, uses body weight × 30.
 
 ### Weight Tracking
 - **Graph style: Apple Health inspired**
@@ -551,6 +553,49 @@ sloth/
     - Intake: Progress dots use brown
     - Loading spinner: Brown accent
   - **Design philosophy**: Warm, earthy, organic feel matching the Faultierdiät brand identity from the PDFs — replacing the generic cold tech-green look
+
+- **Supabase Free-Tier Pause Issue (IMPORTANT for future sessions):**
+  - Login appeared broken after deploy — error: `[Errno -2] Name or service not known`
+  - Root cause: Supabase free-tier projects auto-pause after ~7 days of inactivity
+  - Fix: Go to https://supabase.com/dashboard → find project → click "Restore project"
+  - Restoration takes 1-2 minutes, then everything works again
+  - ⚠️ **If auth/login stops working, check Supabase dashboard FIRST before debugging code**
+
+### Session 12 - February 18, 2026
+- **Intake Flow Simplification (based on domain expert feedback):**
+  - **Removed goal weight question** from Screen 2 — was irrelevant to the Faultierdiät methodology. Screen 2 now only asks for current weight. Existing users who already have goal_weight_kg still see their progress data.
+  - **Replaced activity level with calorie-awareness model** in Screen 3:
+    - Users choose between three visual buttons: "Ich nehme zu" (↑), "Ich halte mein Gewicht" (→), "Ich nehme ab" (↓)
+    - If they know their calorie intake, they enter it in a number field
+    - If they don't know: "Ich weiß nichts über meine Kalorienaufnahme" button — system estimates from body weight × 30
+    - Reassuring message: "Das System korrigiert sich automatisch wöchentlich"
+  - **Activity level hidden** from Profile page (kept in DB for backward compatibility, just not shown in UI)
+
+- **Level System Rebrand — "Stufe 1-5" → "2100 kcal" etc.:**
+  - Replaced all "Stufe N" labels with actual calorie targets based on gender:
+    - Men: 2700 / 2400 / 2100 / 1800 / 1500 kcal
+    - Women: 2400 / 2100 / 1800 / 1500 / 1200 kcal
+  - Updated: Dashboard pill, Meals page badge + info text, Profile card + diet settings
+  - Internal DB still stores `current_level` as 1-5 (no migration needed)
+  - Added `CALORIE_LEVELS` map and `getLevelLabel()` helper to `types/index.ts`
+
+- **New Starting Level Calculation:**
+  - Replaced old weight-to-lose formula with calorie-awareness logic:
+    - "gaining" → level at or below their reported intake
+    - "maintaining" → one level below (create deficit)
+    - "losing" → level closest to their intake (already in deficit)
+    - "unknown" → body weight × 30 → next level down
+  - Starting point doesn't need to be perfect — weekly stall detection auto-corrects
+
+- **Stall detection messages** translated to German and updated to reference "Kalorienlevel" instead of "level"
+
+- **Backend schema changes:**
+  - Added `CalorieAwareness` enum (gaining/maintaining/losing/unknown)
+  - `IntakeScreen2` no longer requires `goal_weight_kg`
+  - `IntakeScreen3` now uses `calorie_awareness` + `known_calorie_intake` instead of `activity_level`
+  - `ProfileUpdate` no longer exposes `goal_weight_kg` or `activity_level`
+
+- **Build verified passing** ✅
 
 ---
 
